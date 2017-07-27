@@ -1,0 +1,20 @@
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #0067A3;
+  padding: 2px 20px;
+  color: white;
+}
+
+.App-content {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  /* минус высота header и внутренние отступы*/
+  min-height: calc(100vh - 72px - 120px);
+  background: #0079BF;
+  padding: 60px 0;
+}
+

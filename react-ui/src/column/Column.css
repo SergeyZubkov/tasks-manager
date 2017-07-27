@@ -1,0 +1,18 @@
+.column {
+	background: #E2E4E6;
+	width: 20%;
+	padding: 0 5px;
+	border-radius: 5px;
+}
+
+.column__header {
+	padding-left: 10px;
+}
+
+.column__header h3 {
+	margin: 0;
+	padding: 18px 0;
+	color: #555;
+	font-weight: bold;
+	text-align: left;
+}
