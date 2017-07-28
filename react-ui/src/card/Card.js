@@ -16,7 +16,6 @@ class Card extends Component {
     const {
       author,
       executor,
-      title,
       text,
       dateCreate,
       comments

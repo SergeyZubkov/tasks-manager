@@ -21,6 +21,8 @@ class Dropdown extends React.Component {
 
 	componentDidMount() {
 		this.documentListener = listen(document, 'click', this.handleDocumentClick, false);
+		this.resizeListener = listen(document, 'resize', this.updatePosition, false);
+		this.updatePosition();
 	}
 
 	updatePosition() {
@@ -87,6 +89,7 @@ class Dropdown extends React.Component {
 
 	componentWillUnmount() {
 		this.documentListener();
+		this.resizeListener();
 	}
 
 	render() {
