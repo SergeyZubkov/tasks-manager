@@ -1,12 +1,22 @@
 .column {
 	background: #E2E4E6;
 	width: 20%;
-	padding: 0 5px;
+	padding: 0 5px 5px;
 	border-radius: 5px;
+	min-width: 205px;
+	margin: 0 auto 20px;
+}
+
+@media (max-width: 880px) {
+	.column {
+		width: 80%;
+
+	}
 }
 
 .column__header {
-	padding-left: 10px;
+	display: flex;
+	padding: 0 10px;
 }
 
 .column__header h3 {
@@ -15,4 +25,21 @@
 	color: #555;
 	font-weight: bold;
 	text-align: left;
+	flex-grow: 1;
+}
+
+.column__panel .collapse,
+.column__panel .collapsing {
+	overflow: hidden;
+}
+
+.column__panel .collapse.in {
+	overflow: inherit;
+}
+
+.column__counter {
+	display: inline-block;
+	font-weight: 400;
+	align-self: flex-end;
+	padding: 18px 0;
 }

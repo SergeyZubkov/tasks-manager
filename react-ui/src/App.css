@@ -10,11 +10,19 @@
 
 .App-content {
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
   align-items: flex-start;
+  flex-wrap: wrap;
   /* минус высота header и внутренние отступы*/
   min-height: calc(100vh - 72px - 120px);
   background: #0079BF;
   padding: 60px 0;
+  text-align: left;
+  margin: 0 auto;
 }
 
+@media (max-width: 880px) {
+  .App-content {
+    display: block;
+  }
+}

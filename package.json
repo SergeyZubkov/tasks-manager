@@ -16,9 +16,7 @@
   "dependencies": {
     "express": "^4.14.1",
     "moment": "^2.18.1",
-    "react": "^15.6.1",
     "react-bootstrap": "^0.31.1",
-    "react-dom": "^15.6.1",
     "react-fontawesome": "^1.6.1",
     "react-time": "^4.3.0"
   },

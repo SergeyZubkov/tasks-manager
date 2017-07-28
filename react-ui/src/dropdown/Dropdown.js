@@ -12,15 +12,17 @@ class Dropdown extends React.Component {
 
 		this.state = {
 			isOpen: false,
-			orentationHorizontal: 'left',
+			orentationHorizontal: 'right',
 			orentationVertical: 'bottom',
-			orentationHorizontalInitial: 'left',
+			orentationHorizontalInitial: 'right',
 			orentationVerticalInitial: 'bottom'
 		}
 	}
 
 	componentDidMount() {
 		this.documentListener = listen(document, 'click', this.handleDocumentClick, false);
+		this.resizeListener = listen(document, 'resize', this.updatePosition, false);
+		this.updatePosition();
 	}
 
 	updatePosition() {
@@ -79,7 +81,6 @@ class Dropdown extends React.Component {
 	handleThisClick(e) {
 		const isOpen = this.state.isOpen;
 		const title= this.dropdownTitle;
-		let res = false;
 
 		return isOpen&&e.target !== title
 					 &&!contains(ReactDOM.findDOMNode(title), e.target);
@@ -87,6 +88,7 @@ class Dropdown extends React.Component {
 
 	componentWillUnmount() {
 		this.documentListener();
+		this.resizeListener();
 	}
 
 	render() {
