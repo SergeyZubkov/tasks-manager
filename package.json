@@ -15,10 +15,10 @@
   ],
   "dependencies": {
     "express": "^4.14.1",
+    "merge": "^1.2.0",
     "moment": "^2.18.1",
     "react-bootstrap": "^0.31.1",
-    "react-fontawesome": "^1.6.1",
-    "react-time": "^4.3.0"
+    "react-fontawesome": "^1.6.1"
   },
   "repository": {
     "type": "git",

@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
 import './App.css';
-
 import Time from 'react-time';
-
-import Column from './column/Column'
+import Column from './column/Column';
+import DataService from './DataService';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    
+    this.state = {
+      columns: DataService.getData()
+    }
+  }
   render() {
     let now = new Date();
     return (

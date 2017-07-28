@@ -6,8 +6,13 @@
     "react-scripts": "0.9.5"
   },
   "dependencies": {
+    "axios": "^0.16.2",
+    "moment": "^2.18.1",
     "react": "^15.4.2",
-    "react-dom": "^15.4.2"
+    "react-bootstrap": "^0.31.1",
+    "react-dom": "^15.4.2",
+    "react-fontawesome": "^1.6.1",
+    "react-time": "^4.3.0"
   },
   "scripts": {
     "start": "react-scripts start",
