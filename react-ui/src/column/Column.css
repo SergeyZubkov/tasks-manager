@@ -7,11 +7,9 @@
 	margin: 0 auto 20px;
 }
 
-
 @media (max-width: 880px) {
 	.column {
 		width: 80%;
-
 	}
 }
 

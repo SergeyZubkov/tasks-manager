@@ -20,8 +20,22 @@ class Column extends Component {
     this.identifyStatePanel();
   }
 
-  componentWillUnmount() {
-    this.resizeListener();
+  identifyStatePanel() {
+    if (window.matchMedia("(max-width: 880px)").matches) {
+      this.setState({isOpen: false});
+    } else {
+      console.log('ggg')
+      this.setState({isOpen: true});
+    }
+  }
+
+  handleClick = () => {
+    this.setState((state) => {
+      return {
+        isOpen: !state.isOpen
+      };
+    });
+
   }
 
   identifyStatePanel() {
