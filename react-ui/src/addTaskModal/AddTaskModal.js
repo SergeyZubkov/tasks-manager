@@ -21,10 +21,10 @@ class AddTaskModal extends Component {
 	}
 
 	componentDidMount() {
+		console.log(dataService)
 		dataService
 		.getUsers()
 		.then((users) => {
-			console.log(users)
 			this.setState({
 				executors: users,
 				executur: users[0]

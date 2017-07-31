@@ -33,7 +33,6 @@ class App extends Component {
   }
 
   render() {
-    let now = new Date();
     return (
       <div className="App">
         <div className="App-header">
