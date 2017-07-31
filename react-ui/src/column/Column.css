@@ -7,6 +7,7 @@
 	margin: 0 auto 20px;
 }
 
+
 @media (max-width: 880px) {
 	.column {
 		width: 80%;
@@ -35,6 +36,17 @@
 
 .column__panel .collapse.in {
 	overflow: inherit;
+}
+
+.column__panel.panel {
+	border: none;
+	background: transparent;
+	margin-bottom: 0;
+	box-shadow: none;
+}
+
+.column__panel .panel-body {
+	padding: 0;
 }
 
 .column__counter {

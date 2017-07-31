@@ -2,29 +2,49 @@ import axios from 'axios';
 
 class DataService {
 
-	constructor() {
-
-	}
-
-	getData() {
+	getColumns() {
 		return axios.get('/api')
-		.then(function (response) {
-			console.log(response);
+		.then(response => {
+			return response.data.columns;
 		})
-		.catch(function (error) {
+		.catch(error => {
 			console.log(error);
 		});
 	}
 
 	postData() {
-		axios.then(function (response) {
+		axios.then(response => {
 			console.log(response);
 			return 
 		})
-		.catch(function (error) {
+		.catch(error => {
+			console.log(error);
+		});
+	}
+
+	addTask(task) {
+		axios.post('/api')
+		.then(response => {
+			console.log(response);
+			return 
+		})
+		.catch(error => {
+			console.log(error);
+		});
+	}
+
+	getUsers() {
+		return axios.get('/api/users')
+		.then(response => {
+			console.log(response)
+			return response.data;
+		})
+		.catch(error => {
 			console.log(error);
 		});
 	}
 }
 
-export default DataService;
+const dataService = new DataService();
+
+export default dataService;

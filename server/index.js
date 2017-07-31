@@ -11,9 +11,17 @@ app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
 
 // Answer API requests.
 app.get('/api', function (req, res) {
-  res.set('Content-Type', 'application/json');
   fs.readFile(__dirname + '/data.json', function(err, file) {
-  	res.send(file);		
+    res.set('Content-Type', 'application/json');
+    res.send(file);
+  });
+});
+
+app.get('/api/users', function (req, res) {
+  fs.readFile(__dirname + '/data.json', function(err, file) {
+    file = JSON.stringify(JSON.parse(file).users);
+    res.set('Content-Type', 'application/json');
+    res.send(file);
   });
 });
 

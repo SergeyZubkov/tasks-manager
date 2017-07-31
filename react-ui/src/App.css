@@ -14,7 +14,7 @@
   align-items: flex-start;
   flex-wrap: wrap;
   /* минус высота header и внутренние отступы*/
-  min-height: calc(100vh - 72px - 120px);
+  min-height: calc(100vh - 67px);
   background: #0079BF;
   padding: 60px 0;
   text-align: left;
