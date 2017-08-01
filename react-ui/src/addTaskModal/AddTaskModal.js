@@ -102,7 +102,7 @@ class AddTaskModal extends Component {
 				      <ControlLabel>Задача</ControlLabel>
 				      <FormControl 
 				      	componentClass="textarea" 
-				      	placeholder="textarea"
+				      	placeholder="..."
 				      	onChange={this.handleChangeTextarea} 
 				      />
 				    </FormGroup>

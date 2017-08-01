@@ -2,9 +2,12 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const merge = require('merge');
+const connect = require('./db/connect');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+connect();
 
 // Priority serve any static files.
 app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
