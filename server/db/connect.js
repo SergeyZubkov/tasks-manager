@@ -8,7 +8,6 @@ module.exports = function () {
 	  // Find the appropriate database to connect to, default to localhost if not found.
 	  function connect() {
 	    mongoose.Promise = bluebird;
-	    console.log('1')
 	    mongoose.connect(db, function(err) {
 	      if (err) {
 	        console.log(`===>  Error connecting to ${db}`);

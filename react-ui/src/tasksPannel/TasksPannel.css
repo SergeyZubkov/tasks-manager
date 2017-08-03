@@ -1,14 +1,14 @@
-.App {
+.tasks-pannel {
   text-align: center;
 }
 
-.App-header {
+.tasks-pannel-header {
   background-color: #0067A3;
   padding: 2px 20px;
   color: white;
 }
 
-.App-content {
+.tasks-pannel-content {
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
@@ -22,7 +22,7 @@
 }
 
 @media (max-width: 880px) {
-  .App-content {
+  .tasks-pannel-content {
     display: block;
   }
 }
