@@ -100,7 +100,7 @@ class Dropdown extends React.Component {
 
 		return (
 			<div 
-				className={`dropdown ${this.props.className||''}`}
+				className={`dropdown ${this.props.className||''} ${this.state.isOpen ? 'dropdown-open': ''}`}
 			>
 				<div className='dropdown-title' 
 					ref={dropdownTitle => this.dropdownTitle = dropdownTitle}

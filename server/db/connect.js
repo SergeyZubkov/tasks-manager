@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 const db = require('./constants');
 const bluebird = require('bluebird');
-// import loadModels from './models';
+const loadModels = require('./models');
 
 module.exports = function () {
 	  // Find the appropriate database to connect to, default to localhost if not found.
@@ -22,5 +22,5 @@ module.exports = function () {
 	  mongoose.connection.on('error', console.log);
 	  mongoose.connection.on('disconnected', connect);
 
-	  // loadModels();
+	  loadModels();
 }

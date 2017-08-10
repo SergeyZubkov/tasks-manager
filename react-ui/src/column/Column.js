@@ -3,7 +3,8 @@ import './Column.css';
 
 import Card from '../card/Card';
 import {Panel} from 'react-bootstrap';
-import {listen} from 'dom-helpers/events';
+import _ from 'lodash';
+import taskDataService from '../data/taskDataService';
 
 class Column extends Component {
   constructor(props) {
@@ -14,6 +15,7 @@ class Column extends Component {
     }
 
     this.identifyStatePanel = this.identifyStatePanel.bind(this);
+
   }
 
   componentDidMount() {
@@ -38,15 +40,6 @@ class Column extends Component {
 
   }
 
-  identifyStatePanel() {
-    if (window.matchMedia("(max-width: 880px)").matches) {
-      this.setState({isOpen: false});
-    } else {
-      console.log('ggg')
-      this.setState({isOpen: true});
-    }
-  }
-
   handleClick = () => {
     this.setState((state) => {
       return {
@@ -56,7 +49,21 @@ class Column extends Component {
 
   }
 
+  deleteTask = (id) => {
+    taskDataService
+    .remove(id)
+  }
+
+  sortByDateNewFirst() {
+    return _.sortBy(this.props.cards, 
+      card => +new Date(card.date)
+    ).reverse();
+  }
+
   render() {
+        console.log(this.props);
+    const cards = this.sortByDateNewFirst()
+
     return (
       <div className="column">
          <div 
@@ -64,12 +71,12 @@ class Column extends Component {
             onClick={this.handleClick}
           > 
             <h3>
-              {this.props.data.title} 
+              {this.props.title} 
             </h3>
             <span
                 className='column__counter'
             >
-              {this.props.data.cards.length}
+              {this.props.cards.length}
             </span>
           </div>
         <Panel
@@ -77,8 +84,8 @@ class Column extends Component {
           expanded={this.state.isOpen}
           collapsible
         >
-          {this.props.data.cards.map(card => {
-            return <Card key={card.title} data={card} />
+          {cards.map(card => {
+            return <Card key={card._id} onDeleteTask={this.deleteTask} {...card}/>
           })}
        </Panel>
       </div>

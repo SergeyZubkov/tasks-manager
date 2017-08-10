@@ -1,3 +1,5 @@
-module.exports.loadModels = function() {
+module.exports = function() {
 	require('./user');
+	require('./task');
+	require('./client');
 }

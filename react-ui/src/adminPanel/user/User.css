@@ -1,0 +1,10 @@
+.user {
+	
+}
+
+
+@media (max-width: 480px) {
+	.user button {
+		font-size: 10px;
+	}
+}

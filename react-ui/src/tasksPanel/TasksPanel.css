@@ -1,20 +1,27 @@
-.tasks-pannel {
+.tasks-panel {
   text-align: center;
 }
 
-.tasks-pannel-header {
+.tasks-panel-header {
   background-color: #0067A3;
-  padding: 2px 20px;
+  padding: 10px 20px;
   color: white;
 }
 
-.tasks-pannel-content {
+.tasks-panel-header .container {
+  text-align: left;
+}
+
+.tasks-panel-header button {
+  margin-left: 10px;
+}
+.tasks-panel-content {
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
   flex-wrap: wrap;
   /* минус высота header и внутренние отступы*/
-  min-height: calc(100vh - 67px);
+  min-height: calc(100vh - 54px);
   background: #0079BF;
   padding: 60px 0;
   text-align: left;
@@ -22,7 +29,7 @@
 }
 
 @media (max-width: 880px) {
-  .tasks-pannel-content {
+  .tasks-panel-content {
     display: block;
   }
 }

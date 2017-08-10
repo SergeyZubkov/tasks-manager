@@ -1,0 +1,23 @@
+.client-item.list-group-item {
+	cursor: pointer;
+	font-size: 17px;
+	position: relative;
+}
+
+.client-item button {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.client-item button:nth-child(2) {
+	right: 15px;
+}
+
+.client-item button:nth-child(1) {
+	right:  65px;
+}
+
+.client-item:hover {
+	background: #efefef;
+}

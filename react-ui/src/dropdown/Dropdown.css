@@ -4,6 +4,10 @@
 	position: relative;
 }
 
+.dropdown.dropdown-open {
+	z-index: 10000;
+}
+
 .dropdown-title {
 	padding: 5px 10px;
 	cursor: pointer;

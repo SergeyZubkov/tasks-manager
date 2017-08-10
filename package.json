@@ -7,7 +7,8 @@
   },
   "scripts": {
     "start": "node server",
-    "heroku-postbuild": "cd react-ui/ && npm install &&  npm install --only=dev --no-shrinkwrap --no-bin-links --production && npm run build"
+
+    "heroku-postbuild": "cd react-ui/ && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },
   "cacheDirectories": [
     "node_modules",
@@ -15,12 +16,14 @@
   ],
   "dependencies": {
     "bluebird": "^3.5.0",
+    "body-parser": "^1.17.2",
     "express": "^4.14.1",
+    "jsonwebtoken": "^7.4.2",
     "merge": "^1.2.0",
-    "moment": "^2.18.1",
     "mongoose": "^4.10.8",
-    "react-bootstrap": "^0.31.1",
-    "react-fontawesome": "^1.6.1"
+    "passport": "^0.3.2",
+    "passport-jwt": "^2.2.1",
+    "passport-local": "^1.0.0"
   },
   "repository": {
     "type": "git",

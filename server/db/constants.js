@@ -1,1 +1,1 @@
-module.exports = process.env.MONGOHQ_URL || process.env.MONGODB_URI || 'mongodb://localhost:27017/t';
+module.exports = process.env.MONGOHQ_URL || process.env.MONGODB_URI || 'mongodb://admin:1@ds033966.mlab.com:33966/tasks-manager';

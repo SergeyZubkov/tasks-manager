@@ -1,3 +1,18 @@
 .login {
-	
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+  background-color: #0067A3;
+}
+
+.login h2 {
+	text-align: center;
+	border-bottom: 1px solid #efefef;
+	margin: 0;
+	padding: 0 0 10px;
+}
+
+.login form {
+	padding-top: 20px;
 }
