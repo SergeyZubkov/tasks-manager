@@ -3,7 +3,6 @@
  * Code modified from https://github.com/sahat/hackathon-starter
  */
 const mongoose = require('mongoose');
-
 // Other oauthtypes to be added
 
 /*

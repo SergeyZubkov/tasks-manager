@@ -1,7 +1,0 @@
-{
-  "proxies": {
-    "/api/": {
-      "origin": "https://tasks-manager-.herokuapp.com/"
-    }
-  }
-}

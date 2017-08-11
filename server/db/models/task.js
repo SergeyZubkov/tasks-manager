@@ -3,13 +3,14 @@
  *
  */
 const mongoose = require('mongoose');
+const timeZone = require('mongoose-timezone');
 const Schema = mongoose.Schema;
 
 const ComentSchema = new mongoose.Schema({
 	author: String,
 	authorId: String,
 	text: String,
-	date: {type: Date, default: Date.now}
+	date: {type: Date}
 });
 
 const TaskSchema = new mongoose.Schema({
@@ -20,8 +21,12 @@ const TaskSchema = new mongoose.Schema({
 	responsible: String,
 	comments: [ComentSchema],
   text: String,
-  date: { type: Date, default: Date.now }
+  date: { type: Date}
 });
+
+// If no path is given, all date fields will be applied 
+TaskSchema.plugin(timeZone);
+ComentSchema.plugin(timeZone);
 
 
 // Compiles the schema into a model, opening (or creating, if

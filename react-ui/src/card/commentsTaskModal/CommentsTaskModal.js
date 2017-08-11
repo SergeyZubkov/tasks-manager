@@ -28,7 +28,8 @@ class CommentsTaskModal extends Component {
 	submit = () => {
 		const comment = {
 			author: userDataService.getCurrentUser().name,
-			text: this.state.text
+			text: this.state.text,
+			date: new Date()
 		};
 
 		const taskId = this.props._id;

@@ -65,7 +65,8 @@ class AddTaskModal extends Component {
 			responsible: this.state.responsible,
 			text: this.state.text,
 			column: 'Задачи',
-			client: this.state.client
+			client: this.state.client,
+			date: new Date()
 		};
 
 		console.log(task);
