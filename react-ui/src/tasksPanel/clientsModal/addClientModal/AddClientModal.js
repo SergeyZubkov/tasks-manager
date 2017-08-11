@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import './AddClientModal.css';
 import {Button, Modal, FormGroup, ControlLabel, FormControl} from 'react-bootstrap';
-import clientDataService from '../../data/clientDataService';
+import clientDataService from '../../../data/clientDataService';
 import ReactTelInput from 'react-telephone-input';
-import flagsCountriesSrc from '../../flags.png';
+import flagsCountriesSrc from '../../../flags.png';
 console.log(`flags ${flagsCountriesSrc}`);
 class AddClientModal extends Component {
 

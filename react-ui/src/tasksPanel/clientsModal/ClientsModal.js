@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import './ClientsModal.css';
-import {Modal, ListGroup} from 'react-bootstrap';
+import {Modal, ListGroup, Button, } from 'react-bootstrap';
 import ClientItem from './clientItem/ClientItem';
+import FontAwesome from 'react-fontawesome';
+import AddClientModal from './addClientModal/AddClientModal';
 
 
 class ClientsModal extends Component {
@@ -10,7 +12,8 @@ class ClientsModal extends Component {
 		super(props);
 		
 		this.state = {
-			show: this.props.show
+			show: this.props.show,
+			showAddClientModal: false,
 		}
 		
 		console.log('clients mounted ');
@@ -19,6 +22,14 @@ class ClientsModal extends Component {
 	componentWillReceiveProps(nextProps) {
 		this.setState({show: nextProps.show});
 	}
+
+	addClient= () => {
+    this.setState({showAddClientModal: true});
+  }
+
+	closeAddClientModal = () => {
+    this.setState({showAddClientModal: false});
+  }
 
 	close = () => {
 		this.props.onHide();
@@ -39,11 +50,23 @@ class ClientsModal extends Component {
 				<Modal.Header 
 					closeButton
 				> 
-					<Modal.Title> Клиенты ({clients.length}) </Modal.Title>
+					<Modal.Title> Клиенты ({clients.length}) 
+						  <Button 
+                bsStyle='success'
+                onClick={this.addClient}
+              > 
+	              <FontAwesome name='plus-square-o' />
+	              <div className="hidden-xs">&nbsp;Добавить клиента</div>
+              </Button>
+					</Modal.Title>
 				</Modal.Header>
 				<ListGroup>
 					{clients.map(client => <ClientItem key={client._id} {...client} />)}
 				</ListGroup>
+				<AddClientModal
+          show={this.state.showAddClientModal}
+          onHide={this.closeAddClientModal}
+        />
 			</Modal>
 		);
 	}

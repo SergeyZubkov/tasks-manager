@@ -8,7 +8,6 @@ import clientDataService from '../data/clientDataService';
 import AddTaskModal from './addTaskModal/AddTaskModal';
 import FontAwesome from 'react-fontawesome';
 import AuthService from '../AuthService';
-import AddClientModal from './addClientModal/AddClientModal';
 import ClientsModal from './clientsModal/ClientsModal';
 
 
@@ -19,7 +18,6 @@ class TasksPannel extends Component {
     this.state = {
       user: null,
       showAddTaskModal: false,
-      showAddClientModal: false,
       showClientsModal: false,
       showClientInfoModal: false,
       columnsTitles: [
@@ -114,10 +112,6 @@ class TasksPannel extends Component {
     this.setState({showAddTaskModal: true});
   }
 
-  addClient= () => {
-    this.setState({showAddClientModal: true});
-  }
-
   showClients = () => {
     this.setState({showClientsModal: true});
   }
@@ -129,10 +123,6 @@ class TasksPannel extends Component {
 
   closeAddTaskModal = () => {
     this.setState({showAddTaskModal: false});
-  }
-
-  closeAddClientModal = () => {
-    this.setState({showAddClientModal: false});
   }
 
   closeClientsModal = () => {
@@ -155,26 +145,22 @@ class TasksPannel extends Component {
                 bsStyle='primary'
                 onClick={this.addTask}
               > 
-              + Добавить задачу
-              </Button>
-              <Button 
-                bsStyle='primary'
-                onClick={this.addClient}
-              > 
-              + Добавить клиента
+                <FontAwesome name='plus-square-o' />
+                <div className="hidden-xs">&nbsp;Добавить задачу</div>
               </Button>
               <Button 
                 bsStyle='primary'
                 onClick={this.showClients}
               > 
-                Клиенты
+                <FontAwesome name='address-card-o' />
+                <div className="hidden-xs">&nbsp;Клиенты</div>
               </Button>
               <Button 
                 bsStyle='primary'
                 onClick={this.logOut}
               > 
                 <FontAwesome name='sign-out' />
-                &nbsp;Выйти
+                <div className="hidden-xs">&nbsp;Выйти</div>
               </Button>
             </Row>
           </Grid>
@@ -189,10 +175,6 @@ class TasksPannel extends Component {
           show={this.state.showAddTaskModal}
           onHide={this.closeAddTaskModal}
           clients={this.state.clients}
-        />
-        <AddClientModal
-          show={this.state.showAddClientModal}
-          onHide={this.closeAddClientModal}
         />
         <ClientsModal
           show={this.state.showClientsModal}

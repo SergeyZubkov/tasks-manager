@@ -2,3 +2,16 @@
 	
 }
 
+.clients-modal .modal-title button {
+	float: right;
+	margin-right: 15px;
+	margin-top: -5px;
+}
+
+.clients-modal .modal-header .close {
+	margin-top: 2px;
+}
+
+.clients-modal .hidden-xs {
+	display: inline-block;
+}

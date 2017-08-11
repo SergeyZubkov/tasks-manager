@@ -9,11 +9,15 @@
 }
 
 .tasks-panel-header .container {
-  text-align: left;
+  text-align: center;
 }
 
 .tasks-panel-header button {
   margin-left: 10px;
+}
+
+.tasks-panel-header button:nth-child(2) {
+  margin-right: 60px;
 }
 .tasks-panel-content {
   display: flex;
@@ -32,4 +36,8 @@
   .tasks-panel-content {
     display: block;
   }
+}
+
+.tasks-panel .hidden-xs {
+  display: inline-block;
 }
