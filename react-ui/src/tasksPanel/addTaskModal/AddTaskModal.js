@@ -4,6 +4,7 @@ import {Button, Modal, FormGroup, ControlLabel, FormControl} from 'react-bootstr
 import userDataService from '../../data/userDataService';
 import taskDataService from '../../data/taskDataService';
 import clientDataService from '../../data/clientDataService';
+import DatePicker  from 'react-bootstrap-date-picker';
 
 
 class AddTaskModal extends Component {
@@ -18,7 +19,9 @@ class AddTaskModal extends Component {
 			executor: '',
 			task: '',
 			client: '',
-			clients: this.props.clients
+			clients: this.props.clients,
+			deadline: null,
+			deadlineFormatted: null,
 		}
 		
 	}
@@ -66,7 +69,8 @@ class AddTaskModal extends Component {
 			text: this.state.text,
 			column: 'Задачи',
 			client: this.state.client,
-			date: new Date()
+			date: new Date(),
+			deadline: this.state.deadlineFormatted,
 		};
 
 		console.log(task);
@@ -112,6 +116,11 @@ class AddTaskModal extends Component {
 		console.log(client)
 	}
 
+	changeDate = (value, formattedValue) => {
+		const [deadline, deadlineFormatted] = [value, formattedValue];
+		this.setState({deadline, deadlineFormatted})
+	}
+
 	render() {
 		return (
 			<Modal 
@@ -155,6 +164,25 @@ class AddTaskModal extends Component {
 							  >
 					        {this.renderResponsibleSelectOptions()}
 					      </FormControl>
+						</FormGroup>
+						<FormGroup>
+							<ControlLabel>Проверяющий</ControlLabel>
+							  <FormControl 
+							  	componentClass="select" 
+							  	defaultValue={this.state.responsible}
+							  	onChange={this.changeResponsibleSelect}
+							  >
+					        {this.renderResponsibleSelectOptions()}
+					      </FormControl>
+						</FormGroup>
+						<FormGroup>
+							<ControlLabel>Выполнить до</ControlLabel>
+							  <DatePicker 
+							  	value={this.state.deadline}
+							  	onChange={this.changeDate}
+							  	dayLabels={['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']}
+							  	monthLabels={['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Ноябрь','Декабрь']}
+							  />
 						</FormGroup>
 						<FormGroup>
 				      <ControlLabel>Задача</ControlLabel>

@@ -21,7 +21,8 @@ const TaskSchema = new mongoose.Schema({
 	responsible: String,
 	comments: [ComentSchema],
   text: String,
-  date: { type: Date}
+  date: Date,
+  deadline: String
 });
 
 // If no path is given, all date fields will be applied 

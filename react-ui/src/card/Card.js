@@ -82,7 +82,8 @@ class Card extends Component {
       responsible,
       column,
       _id,
-      client
+      client,
+      deadline
     } = this.props;
 
     console.log(this.props);
@@ -95,7 +96,14 @@ class Card extends Component {
     return (
       <div className="card">
         <div className="card__header">
-          <span>{author} > {executor}</span>
+          <div>
+            <div className="author">
+              <span> создал: </span>  <b>{author}</b>
+            </div>
+            <div className="executor">
+              <span> исполнитель: </span> <b>{executor}</b>
+            </div>
+          </div>
           <div
             style={{
               display: disableMenu ? 'none' : ''
@@ -127,6 +135,9 @@ class Card extends Component {
         </div>
         <div className="card__body">
           {text}
+        </div>
+        <div className="deadline">
+          <i>выполнить до</i> {deadline}
         </div>
         <div className="card__footer">
           {moment(date).format("DD/MM/YY HH:mm")}
