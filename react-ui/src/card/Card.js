@@ -58,7 +58,6 @@ class Card extends Component {
   }
 
   closeClientInfoModal = () => {
-    console.log('bbbbb')
     this.setState({
       showClientInfoModal: false
     });
@@ -88,12 +87,10 @@ class Card extends Component {
       deadline
     } = this.props;
 
-    console.log(this.props);
     const {
       disableMenu,
       disableCommentsButton
     } = this.props;
-    console.log('disable menu ' + disableMenu)
     const dropdownTitle = <FontAwesome name='ellipsis-v' />;
     return (
       <div className="card">

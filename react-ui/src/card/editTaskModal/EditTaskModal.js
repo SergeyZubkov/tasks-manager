@@ -3,6 +3,8 @@ import './EditTaskModal.css';
 import {Button, Modal, FormGroup, ControlLabel, FormControl} from 'react-bootstrap';
 import userDataService from '../../data/userDataService';
 import taskDataService from '../../data/taskDataService';
+import clientDataService from '../../data/clientDataService';
+import DatePicker from 'react-bootstrap-date-picker';
 
 class EditTaskModal extends Component {
 
@@ -11,12 +13,16 @@ class EditTaskModal extends Component {
 		
 		this.state = {
 			show: this.props.show,
+			clients: [],
 			users: [],
 			_id: this.props._id,
+			date: this.props.date,
 			author: this.props.author,
 			executor: this.props.executor,
+			responsible: this.props.responsible,
 			text: this.props.text,
-			responsible: this.props.responsible
+			client: this.props.client,
+			deadline: this.props.deadline
 		}
 	}
 
@@ -28,20 +34,21 @@ class EditTaskModal extends Component {
 		userDataService
 		.getUsers()
 		.then((users) => {
-			console.log(users)
 			this.setState({
 				users: users
 			});
+		});
+		clientDataService 
+		.getAll()
+		.then((clients) => {
+			this.setState({
+				clients: clients
+			})
 		});
 	}
 
 	close = () => {
 		this.props.onHide();
-	}
-
-	handleChangeTextarea = (e) => {
-		console.log(e)
-		this.setState({text: e.target.value});
 	}
 
 	submit = () => {
@@ -58,6 +65,11 @@ class EditTaskModal extends Component {
 		this.close();
 	}
 
+	renderClientSelectOptions() {
+		return this.state.clients
+		.map(client => <option key={client._id} value={client._id}>{client.name}</option>)
+	}
+
 	renderExecutorSelectOptions() {
 		return this.state.users
 		.map(user => <option key={user._id} value={user.name}>{user.name}</option>)
@@ -68,6 +80,7 @@ class EditTaskModal extends Component {
 		.map(user => <option key={user._id} value={user.name}>{user.name}</option>)
 	}
 
+
 	changeExecutorSelect = (e) => {
 		const executor = e.target.value;
 		this.setState({executor});
@@ -76,6 +89,20 @@ class EditTaskModal extends Component {
 	changeResponsibleSelect = (e) => {
 		const responsible = e.target.value;
 		this.setState({responsible});
+	}
+
+	changeTextarea = (e) => {
+		this.setState({text: e.target.value});
+	}
+
+	changeClientSelect = (e) => {
+		const client = e.target.value;
+		this.setState({client});
+	}
+
+	changeDate = (value, formattedValue) => {
+		const [deadline, deadlineFormatted] = [value, formattedValue];
+		this.setState({deadline, deadlineFormatted})
 	}
 
 	render() {
@@ -93,34 +120,53 @@ class EditTaskModal extends Component {
 				<Modal.Body>
 					<form>
 						<FormGroup>
+							<ControlLabel>Клиент</ControlLabel>
+									<FormControl 
+										componentClass="select" 
+										defaultValue={this.state.client}
+										onChange={this.changeClientSelect}
+									>
+									{this.renderClientSelectOptions()}
+								</FormControl>
+						</FormGroup>
+						<FormGroup>
 							<ControlLabel>Исполнитель</ControlLabel>
-							  <FormControl 
-							  	componentClass="select" 
-							  	defaultValue={this.state.executor}
-							  	onChange={this.changeExecutorSelect}
-							  >
-					        {this.renderExecutorSelectOptions()}
-					      </FormControl>
+								<FormControl 
+									componentClass="select" 
+									defaultValue={this.state.executor}
+									onChange={this.changeExecutorSelect}
+								>
+									{this.renderExecutorSelectOptions()}
+								</FormControl>
 						</FormGroup>
 						<FormGroup>
 							<ControlLabel>Проверяющий</ControlLabel>
-							  <FormControl 
-							  	componentClass="select" 
-							  	defaultValue={this.state.responsible}
-							  	onChange={this.changeResponsibleSelect}
-							  >
-					        {this.renderResponsibleSelectOptions()}
-					      </FormControl>
+								<FormControl 
+									componentClass="select" 
+									defaultValue={this.state.responsible}
+									onChange={this.changeResponsibleSelect}
+								>
+									{this.renderResponsibleSelectOptions()}
+								</FormControl>
 						</FormGroup>
 						<FormGroup>
-				      <ControlLabel>Задача</ControlLabel>
-				      <FormControl 
-				      	componentClass="textarea" 
-				      	placeholder="..."
-				      	onChange={this.handleChangeTextarea}
-				      	value={this.state.text}
-				      />
-				    </FormGroup>
+							<ControlLabel>Выполнить до</ControlLabel>
+								<DatePicker 
+									value={this.state.deadline}
+									onChange={this.changeDate}
+									dayLabels={['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']}
+									monthLabels={['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Ноябрь','Декабрь']}
+								/>
+						</FormGroup>
+						<FormGroup>
+							<ControlLabel>Задача</ControlLabel>
+							<FormControl 
+								componentClass="textarea" 
+								placeholder="..."
+								onChange={this.changeTextarea}
+								value={this.state.text}
+							/>
+						</FormGroup>
 						<Button
 						onClick={this.submit}
 						>

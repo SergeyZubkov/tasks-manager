@@ -54,7 +54,6 @@ class TasksPannel extends Component {
     clientDataService
     .getAll()
     .then((clients) => {
-      console.log(clients);
       this.setState({
         clients
       });
@@ -78,7 +77,6 @@ class TasksPannel extends Component {
     const tasks = this.state.tasks;
 
     tasks.forEach(task => {
-      console.log(task.column)
       switch (task.column) {
         case 'Задачи':
           columnTasksCards.push(task);
@@ -96,8 +94,6 @@ class TasksPannel extends Component {
           break;
       }
     });
-
-    console.log(columnTasksCards)
 
     this.setState({
       tasksCards: columnTasksCards,

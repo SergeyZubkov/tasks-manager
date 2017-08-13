@@ -29,7 +29,6 @@ class SelectColumnTaskModal extends Component {
 		userDataService
 		.getUsers()
 		.then((users) => {
-			console.log(users)
 			this.setState({
 				users: users
 			});

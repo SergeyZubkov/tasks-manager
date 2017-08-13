@@ -6,7 +6,6 @@ class TaskDataService extends EventEmitter {
 	getTasks() {
 		return axios.get('/api/tasks')
 		.then(response => {
-			console.log(response.data)
 			return response.data;
 		})
 		.catch(error => {
@@ -18,7 +17,6 @@ class TaskDataService extends EventEmitter {
 		axios.post('/api/tasks', task)
 		.then(response => {
 			this.emit('change');
-			console.log(response);
 			return response;
 		})
 		.catch(error => {
@@ -42,7 +40,6 @@ class TaskDataService extends EventEmitter {
 	update(id, newData) {
 		return axios.put('/api/tasks/'+ id, newData)
 		.then(response => {
-			console.log(response);
 			this.emit('change');
 			return true;
 		})
@@ -54,7 +51,6 @@ class TaskDataService extends EventEmitter {
 	addComment(id, comment) {
 		return axios.post('/api/tasks/'+ id +'/comment', comment)
 		.then(response => {
-			console.log(response);
 			this.emit('change');
 			return true;
 		})

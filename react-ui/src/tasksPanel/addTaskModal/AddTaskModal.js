@@ -39,7 +39,6 @@ class AddTaskModal extends Component {
 		userDataService
 		.getUsers()
 		.then((users) => {
-			console.log(users)
 			this.setState({
 				users: users,
 				executor: users[0].name,
@@ -52,12 +51,10 @@ class AddTaskModal extends Component {
 
 
 	close = () => {
-		console.log('bbb')
 		this.props.onHide();
 	}
 
 	handleChangeTextarea = (e) => {
-		console.log(e)
 		this.setState({text: e.target.value});
 	}
 
@@ -72,8 +69,6 @@ class AddTaskModal extends Component {
 			date: new Date(),
 			deadline: this.state.deadline,
 		};
-
-		console.log(task);
 
 		taskDataService
 		.addTask(task);
@@ -113,7 +108,6 @@ class AddTaskModal extends Component {
 	changeClientSelect = (e) => {
 		const client = e.target.value;
 		this.setState({client});
-		console.log(client)
 	}
 
 	changeDate = (value, formattedValue) => {

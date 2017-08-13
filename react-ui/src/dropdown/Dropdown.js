@@ -63,7 +63,6 @@ class Dropdown extends React.Component {
 	}
 
 	handleClick = (e) => {
-		console.log(e.target)
 		const isOpen = this.state.isOpen;
 		if (isOpen) {
 			this.toggleOpen({isOpen: false})

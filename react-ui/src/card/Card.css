@@ -109,3 +109,8 @@
 	color: #0079BF;
 	padding-right: 5px;
 }
+
+.card__client {
+	cursor: pointer;
+	color: #0079BF;
+}

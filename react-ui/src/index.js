@@ -22,7 +22,6 @@ class PrivateRoute extends React.Component {
     AuthService.isAuthenticated()
     .then(response => {
       // в ответе объект юзер
-      console.log(response);
       this.setState({
         isLoaded: true,
         isAuthenticated: true

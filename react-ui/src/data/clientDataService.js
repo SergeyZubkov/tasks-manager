@@ -6,7 +6,6 @@ class ClientDataService extends EventEmitter {
 	getAll() {
 		return axios.get('/api/clients')
 		.then(response => {
-			console.log(response)
 			return response.data;
 		})
 		.catch(error => {

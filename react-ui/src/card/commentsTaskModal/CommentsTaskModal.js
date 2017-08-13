@@ -33,7 +33,6 @@ class CommentsTaskModal extends Component {
 		};
 
 		const taskId = this.props._id;
-		console.log(taskId);
 		taskDataService
 		.addComment(taskId, comment);
 		
@@ -56,7 +55,6 @@ class CommentsTaskModal extends Component {
 			client
 		} = this.props;
 
-		console.log(this.props);
 		return (
 			<Modal 
 				className="comments-task-modal"

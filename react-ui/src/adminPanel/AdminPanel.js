@@ -19,7 +19,6 @@ class AdminPannel extends Component {
 
 	componentDidMount() {
 		this.fetch();
-		console.log(userDataService);
 		userDataService.on('change', this.fetch);
 	}
 

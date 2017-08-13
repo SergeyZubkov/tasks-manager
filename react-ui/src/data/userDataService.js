@@ -16,7 +16,6 @@ class DataService extends EventEmitter {
 	login(credentials) {
 		return axios.post('/login', credentials)
 		.then(response => {
-			console.log(response)
 			return response;
 		})
 		.catch(error => {
@@ -42,7 +41,6 @@ class DataService extends EventEmitter {
 	getUsers() {
 		return axios.get('/api/users')
 		.then(response => {
-			console.log(response.data)
 			return response.data;
 		})
 		.catch(error => {
@@ -53,7 +51,6 @@ class DataService extends EventEmitter {
 	addUser(user) {
 		return axios.post('/api/users', user)
 		.then(response => {
-			console.log(response);
 			this.emit('change');
 			return true
 		})
@@ -65,7 +62,6 @@ class DataService extends EventEmitter {
 	deleteUser(id) {
 		return axios.delete('/api/users/'+ id)
 		.then(response => {
-			console.log(response);
 			this.emit('change');
 			return true;
 		})
@@ -77,7 +73,6 @@ class DataService extends EventEmitter {
 	updateUser(id, newData) {
 		return axios.put('/api/users/'+ id, newData)
 		.then(response => {
-			console.log(response);
 			this.emit('change');
 			return true;
 		})

@@ -26,7 +26,6 @@ class Column extends Component {
     if (window.matchMedia("(max-width: 880px)").matches) {
       this.setState({isOpen: false});
     } else {
-      console.log('ggg')
       this.setState({isOpen: true});
     }
   }
@@ -61,7 +60,6 @@ class Column extends Component {
   }
 
   render() {
-        console.log(this.props);
     const cards = this.sortByDateNewFirst()
 
     return (
