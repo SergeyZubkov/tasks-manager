@@ -38,6 +38,17 @@ class ClientDataService extends EventEmitter {
 		});
 	}
 
+	update(id, data) {
+		return axios.put('/api/clients/' + id, data)
+		.then(response => {
+			this.emit('change');
+			return response;
+		})
+		.catch(error => {
+			console.log(error);
+		})
+	}
+
 }
 
 const clientDataService = new ClientDataService();

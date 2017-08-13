@@ -12,6 +12,7 @@ class ClientsModal extends Component {
 		super(props);
 		
 		this.state = {
+			clients: this.props.clients,
 			show: this.props.show,
 			showAddClientModal: false,
 		}

@@ -4,6 +4,7 @@ import {Button, Panel, ListGroupItem} from 'react-bootstrap';
 import FontAwesome from 'react-fontawesome';
 import clientDataService from '../../../data/clientDataService';
 import ClientInfoModal from '../../clientInfoModal/ClientInfoModal';
+import EditClientModal from './editClientModal/EditClientModal';
 
 class ClientItem extends Component {
 
@@ -11,12 +12,21 @@ class ClientItem extends Component {
 		super(props);
 		
 		this.state = {
-			showClienInfoModal: false
+			showClienInfoModal: false,
+			showEditClientModal: false
 		}
 	}
 
-	openClientInfo = (e) => {
-		console.log()
+	openEditClient = (e) => {
+
+		this.setState({
+			showEditClientModal: true
+		});
+
+				e.stopPropagation();
+	}
+
+	openClientInfo = () => {
 		this.setState({
 			showClienInfoModal: true
 		});
@@ -28,12 +38,14 @@ class ClientItem extends Component {
 		});
 	}
 
-	remove = (e) => {
-		clientDataService.remove(this.props._id);
-		e.stopPropagation();
+	closeEditClientModal = () => {
+		this.setState({
+			showEditClientModal: false
+		});
 	}
 
-	edit = (e) => {
+	remove = (e) => {
+		clientDataService.remove(this.props._id);
 		e.stopPropagation();
 	}
 
@@ -53,7 +65,7 @@ class ClientItem extends Component {
 			>
 				{name}
 				<Button
-					onClick={this.edit}
+					onClick={this.openEditClient}
 				>
 					<FontAwesome
 						name='edit'
@@ -72,9 +84,13 @@ class ClientItem extends Component {
 	        onHide={this.closeClientInfoModal} 
 					{...this.props} 
 				/>
-
+				<EditClientModal
+				 	show={this.state.showEditClientModal}
+	        onHide={this.closeEditClientModal} 
+					{...this.props} 
+				/>
 			</li>
-		);
+		)
 	}
 }
 

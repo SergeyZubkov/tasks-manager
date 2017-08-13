@@ -46,7 +46,7 @@ app.post('/api/tasks/:id/comment', taskCtrl.addComment);
 app.get('/api/clients', clientCtrl.getAll);
 app.post('/api/clients', clientCtrl.add);
 app.delete('/api/clients/:id', clientCtrl.remove);
-
+app.put('/api/clients/:id', clientCtrl.update);
 
 
 // All remaining requests return the React app, so it can handle routing.

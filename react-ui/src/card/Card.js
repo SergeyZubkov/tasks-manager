@@ -3,11 +3,13 @@ import './Card.css';
 
 import Dropdown from '../dropdown/Dropdown';
 import FontAwesome from 'react-fontawesome';  
+import {Label} from 'react-bootstrap';
 import moment from 'moment';
 import EditTaskModal from './editTaskModal/EditTaskModal';
 import SelectColumnTaskModal from './selectColumnTaskModal/SelectColumnTaskModal';
 import CommentsTaskModal from './commentsTaskModal/CommentsTaskModal';
 import ClientInfoModal from '../tasksPanel/clientInfoModal/ClientInfoModal';
+import DeadlineProgress from './deadlineProgress/DeadlineProgress';
 
 class Card extends Component {
   constructor(props) {
@@ -98,10 +100,13 @@ class Card extends Component {
         <div className="card__header">
           <div>
             <div className="author">
-              <span> создал: </span>  <b>{author}</b>
+              <Label bsStyle='primary'> создал: </Label>  {author}
             </div>
             <div className="executor">
-              <span> исполнитель: </span> <b>{executor}</b>
+              <Label bsStyle='info'> исполнитель: </Label> {executor}
+            </div>
+            <div className="responsible">
+              <Label bsStyle='success'>ответственный:</Label> {responsible}
             </div>
           </div>
           <div
@@ -125,19 +130,12 @@ class Card extends Component {
             </Dropdown>
           </div>
         </div>
-        <div className="card__sub-header">
-          <span
-            className="card__responsible"
-          >
-            <FontAwesome name='eye' />
-            {responsible}
-          </span>
-        </div>
         <div className="card__body">
           {text}
         </div>
         <div className="deadline">
-          <i>выполнить до</i> {deadline}
+          <i>выполнить до</i> {moment(deadline).format("DD/MM/YY")}
+          <DeadlineProgress fromDate={new Date(date)} toDate={new Date(deadline)} />
         </div>
         <div className="card__footer">
           {moment(date).format("DD/MM/YY HH:mm")}

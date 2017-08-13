@@ -64,28 +64,11 @@ function remove(req, res) {
   });
 }
 
-function addComment(req, res) {
-  const query = { _id: req.params.id };
-  const comment = req.body;
-    Client.findOne(query, (err, client) => {
-      if (err) {
-        console.log('Error on save!');
-        return res.status(500).send('We failed to save for some reason');
-      }
-
-      client.comments.push(comment);
-
-      client.save(function(err) {
-        return res.status(200).send('Updated successfully');  
-      });
-  });
-}
 
 
 module.exports = {
   getAll: getAll,
   add: add,
   update: update,
-  remove: remove,
-  addComment: addComment
+  remove: remove
 }

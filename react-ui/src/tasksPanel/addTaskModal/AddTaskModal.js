@@ -70,7 +70,7 @@ class AddTaskModal extends Component {
 			column: 'Задачи',
 			client: this.state.client,
 			date: new Date(),
-			deadline: this.state.deadlineFormatted,
+			deadline: this.state.deadline,
 		};
 
 		console.log(task);
@@ -153,16 +153,6 @@ class AddTaskModal extends Component {
 							  	onChange={this.changeExecutorSelect}
 							  >
 					        {this.renderExecutorSelectOptions()}
-					      </FormControl>
-						</FormGroup>
-						<FormGroup>
-							<ControlLabel>Проверяющий</ControlLabel>
-							  <FormControl 
-							  	componentClass="select" 
-							  	defaultValue={this.state.responsible}
-							  	onChange={this.changeResponsibleSelect}
-							  >
-					        {this.renderResponsibleSelectOptions()}
 					      </FormControl>
 						</FormGroup>
 						<FormGroup>

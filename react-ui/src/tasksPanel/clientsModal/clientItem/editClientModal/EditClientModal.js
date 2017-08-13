@@ -1,20 +1,19 @@
-import React, { Component } from 'react';
-import './AddClientModal.css';
-import {Button, Modal, FormGroup, ControlLabel, FormControl} from 'react-bootstrap';
-import clientDataService from '../../../data/clientDataService';
+import React, {Component} from 'react';
+import './EditClientModal.css';
+import clientDataService from '../../../../data/clientDataService';
 import ReactTelInput from 'react-telephone-input';
-import flagsCountriesSrc from '../../../flags.png';
+import {Button, Modal, FormGroup, ControlLabel, FormControl} from 'react-bootstrap';
+import flagsCountriesSrc from '../../../../flags.png';
 
-class AddClientModal extends Component {
-
+class EditClientModal extends Component {
 	constructor(props) {
 		super(props);
 		
 		this.state = {
 			show: this.props.show,
-			name: "",
-			phone: '',
-			additionalInfo: ''
+			name: this.props.name||'',
+			phone: this.props.phone||'',
+			additionalInfo: this.props.additionalInfo||''
 		}
 	}
 
@@ -26,9 +25,10 @@ class AddClientModal extends Component {
 		this.props.onHide();
 	}
 
+
 	submit = () => {
 		clientDataService
-		.add({
+		.update(this.props._id, {
 			name: this.state.name,
 			phone: this.state.phone,
 			additionalInfo: this.state.additionalInfo
@@ -54,7 +54,7 @@ class AddClientModal extends Component {
 	render() {
 		return (
 			<Modal 
-				className="add-task-modal"
+				className="edit-client-modal"
 				show={this.state.show}
 				onHide={this.props.onHide}
 			>
@@ -102,4 +102,4 @@ class AddClientModal extends Component {
 	}
 }
 
-export default AddClientModal;
+export default EditClientModal;

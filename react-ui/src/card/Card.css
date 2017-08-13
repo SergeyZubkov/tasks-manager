@@ -7,22 +7,27 @@
 }
 
 .card__header {
-	padding: 15px 15px 0px;
+	padding: 15px 15px;
 	display: flex;
 	justify-content: flex-end;
 	color: #000;
 	font-weight: 500;
-}
-
-.card__sub-header {
-	font-size: 12px;
-	padding: 0px 15px 5px;
 	border-bottom: 1px solid #efefef;
 }
 
 .card__header > div:nth-child(1) {
 	text-align: left;
 	flex-grow: 1;
+}
+
+.card__header .author,
+.card__header .executor,
+.card__header .responsible {
+	font-size: 12px;
+}
+
+.card__header .label {
+	margin-right: 10px;
 }
 
 .card__header i {
@@ -69,7 +74,19 @@
 	background: #fcf8e3;
 	font-size: 12px;
 	line-height: 1.6;
+	padding-bottom: 15px;
 }
+
+.card .deadline .progress {
+	margin-bottom: 0;
+	height: 10px;
+}
+
+.card .deadline .progress-bar {
+	background: #f5d632;
+}
+
+
 .card__footer {
 	padding: 5px 15px 15px;
 	color: #888;
