@@ -6,6 +6,7 @@ class TaskDataService extends EventEmitter {
 	getTasks() {
 		return axios.get('/api/tasks')
 		.then(response => {
+			console.log(response);
 			return response.data;
 		})
 		.catch(error => {

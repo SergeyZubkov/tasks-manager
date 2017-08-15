@@ -87,6 +87,8 @@ class Card extends Component {
       deadline
     } = this.props;
 
+    console.log(client);
+
     const {
       disableMenu,
       disableCommentsButton
@@ -140,7 +142,7 @@ class Card extends Component {
             className="card__client"
             onClick={this.showClientInfo}
           >
-            {client.name}
+            {client ? client.name : ''}
           </div>
           <div 
             className="card__comments"
@@ -170,11 +172,11 @@ class Card extends Component {
           onHide={this.closeCommentsTaskModal}
           {...this.props}
         />
-        <ClientInfoModal
+        {client&&<ClientInfoModal
           show={this.state.showClientInfoModal}
           onHide={this.closeClientInfoModal}
           {...client}
-        />
+        />}
       </div>
     );
   }

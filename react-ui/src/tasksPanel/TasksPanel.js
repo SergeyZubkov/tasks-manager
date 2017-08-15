@@ -58,6 +58,8 @@ class TasksPannel extends Component {
         clients
       });
     });
+
+    this.fetch();
   }
 
   fetch = ()  => {

@@ -20,7 +20,7 @@ function getAll(req, res) {
  * Add a client
  */
 function add(req, res) {
-  console.log(req)
+  console.log(req.body)
   Client.create(req.body, (err, client) => {
     if (err) {
       return res.status(400).send(err);

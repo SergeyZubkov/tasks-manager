@@ -6,21 +6,33 @@ const Client = require('../models/client')
  * List
  */
 function getAll(req, res) {
-  Task.find({})
-  .populate('client')
-  .exec((err, tasks) => {
-    if (err) {
-      console.log('Error in first query');
-      return res.status(500).send('Something went wrong getting the data');
+  let isEmpty = false;
+
+  Task
+  .find({})
+  .count((err, count) => {
+    if (count === 0) {
+      return res.json([]);
+    } else {
+      Task
+      .find({})
+      .populate('client')
+      .exec((err, tasks) => {
+        console.log(tasks)
+        if (err) {
+          console.log('Error in first query');
+          return res.status(500).send('Something went wrong getting the data');
+        }
+        if (tasks) {
+          console.log(tasks);
+          return res.json(tasks)
+        }
+        
+        return res.json([]);
+      });
     }
-    if (tasks) {
-      console.log('get Task');
-      console.log(tasks);
-      return res.json(tasks)
-    }
-    
-    return res.json([]);
-  });
+  })
+
 }
 
 /**

@@ -4,6 +4,8 @@ import clientDataService from '../../../../data/clientDataService';
 import ReactTelInput from 'react-telephone-input';
 import {Button, Modal, FormGroup, ControlLabel, FormControl} from 'react-bootstrap';
 import flagsCountriesSrc from '../../../../flags.png';
+import Validation from 'react-validation';
+
 
 class EditClientModal extends Component {
 	constructor(props) {
@@ -26,7 +28,8 @@ class EditClientModal extends Component {
 	}
 
 
-	submit = () => {
+	submit = (e) => {
+		e.preventDefault();
 		clientDataService
 		.update(this.props._id, {
 			name: this.state.name,
@@ -61,15 +64,18 @@ class EditClientModal extends Component {
 				<Modal.Header 
 					closeButton
 				> 
-					<Modal.Title> Добавить клиента </Modal.Title>
+					<Modal.Title> Редактировать информацию о клиенте </Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					<form>
+					<Validation.components.Form>
 						<FormGroup>
 							<ControlLabel>Название огранизации</ControlLabel>
-								<FormControl 
+								<Validation.components.Input 
+									name='name'
+									className='form-control'
 									type='text'
 									value={this.state.name}
+									validations={['required']}
 									onChange={this.changeName}
 								/>
 						</FormGroup>
@@ -83,19 +89,22 @@ class EditClientModal extends Component {
 						</FormGroup>
 						<FormGroup>
 							<ControlLabel>Дополнительная информация</ControlLabel>
-							<FormControl 
-								componentClass="textarea" 
+							<Validation.components.Textarea 
+								name='additionalInfo'
+								className="form-control" 
 								placeholder="..."
 								onChange={this.changeTextarea}
 								value={this.state.additionalInfo}
+								validations={['required']}
 							/>
 						</FormGroup>
-						<Button
+						<Validation.components.Button
+							className='btn btn-default'
 							onClick={this.submit}
 						>
 							Добавить
-						</Button>
-					</form>
+						</Validation.components.Button>
+					</Validation.components.Form>
 				</Modal.Body>
 			</Modal>
 		)

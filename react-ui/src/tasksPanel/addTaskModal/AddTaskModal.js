@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import './AddTaskModal.css';
-import {Button, Modal, FormGroup, ControlLabel, FormControl} from 'react-bootstrap';
+import {Button, Modal, FormGroup, ControlLabel} from 'react-bootstrap';
 import userDataService from '../../data/userDataService';
 import taskDataService from '../../data/taskDataService';
 import clientDataService from '../../data/clientDataService';
 import DatePicker  from 'react-bootstrap-date-picker';
+import Validation from 'react-validation';
+import moment from 'moment';
+import RichTextEditor from 'react-rte';
 
+const TOMORROW = moment().add(1, 'day').toISOString()
 
 class AddTaskModal extends Component {
 
@@ -17,19 +21,16 @@ class AddTaskModal extends Component {
 			show: this.props.show,
 			users: [],
 			executor: '',
-			task: '',
+			text: RichTextEditor.createEmptyValue(),
 			client: '',
 			clients: this.props.clients,
-			deadline: null,
-			deadlineFormatted: null,
+			deadline: TOMORROW
 		}
-		
 	}
 
 	componentWillReceiveProps(nextProps) {
 		this.setState({show: nextProps.show});
 		this.setState({
-			client: nextProps.clients[0],
 			clients: nextProps.clients
 		});
 
@@ -43,8 +44,7 @@ class AddTaskModal extends Component {
 				users: users,
 				executor: users[0].name,
 				author: '',
-				responsible: users[0].name,
-				text: ''
+				responsible: users[0].name
 			});
 		});
 	}
@@ -54,30 +54,44 @@ class AddTaskModal extends Component {
 		this.props.onHide();
 	}
 
-	handleChangeTextarea = (e) => {
-		this.setState({text: e.target.value});
+	changeText = (text) => {
+		console.log(text.getEditorState().currentContent());
+		this.setState({text: text});
 	}
 
-	submit = () => {
+	submit = (e) => {
+		e.preventDefault();
+
 		const task = {
 			author: this.state.user.name,
 			executor: this.state.executor,
 			responsible: this.state.responsible,
-			text: this.state.text,
+			text: this.state.text.getEditorState(),
 			column: 'Задачи',
-			client: this.state.client,
 			date: new Date(),
 			deadline: this.state.deadline,
 		};
 
+		if (this.state.client) {
+			task.client = this.state.client;
+		}
+
 		taskDataService
 		.addTask(task);
 
-		this.setState({
-			text: ''
-		});
+		this.clearForm();
 
 		this.close();
+	}
+
+	clearForm() {
+		this.setState({
+			executor: '',
+			task: '',
+			client: '',
+			clients: this.props.clients,
+			deadline: TOMORROW
+		})
 	}
 
 	renderExecutorSelectOptions() {
@@ -86,8 +100,10 @@ class AddTaskModal extends Component {
 	}
 
 	renderClientSelectOptions() {
-		return this.state.clients
-		.map(client => <option key={client._id} value={client._id}>{client.name}</option>)
+		let arr = this.state.clients
+		.map(client => <option key={client._id} value={client._id}>{client.name}</option>);
+		arr.push(<option key={'null'} value={''}>------</option>);
+		return arr
 	}
 
 	renderResponsibleSelectOptions() {
@@ -116,6 +132,8 @@ class AddTaskModal extends Component {
 	}
 
 	render() {
+		
+		
 		return (
 			<Modal 
 				className="add-task-modal"
@@ -128,61 +146,70 @@ class AddTaskModal extends Component {
 					<Modal.Title> Добавить задачу </Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					<form>
+					<Validation.components.Form
+						
+					>
 						<FormGroup>
 							<ControlLabel>Клиент</ControlLabel>
-							  <FormControl 
-							  	componentClass="select" 
-							  	defaultValue={this.state.client}
-							  	onChange={this.changeClientSelect}
+							  <Validation.components.Select 
+							  	className='form-control'
+									value={this.state.client}
+									name='client'
+									validations={[]}
+									onChange={this.changeClientSelect}
 							  >
 					        {this.renderClientSelectOptions()}
-					      </FormControl>
+					      </Validation.components.Select>
 						</FormGroup>
 						<FormGroup>
 							<ControlLabel>Исполнитель</ControlLabel>
-							  <FormControl 
-							  	componentClass="select" 
-							  	defaultValue={this.state.executor}
+							  <Validation.components.Select  
+							  	name='executor'
+							  	className='form-control'
+							  	value={this.state.executor}
+							  	validations={['required']}
 							  	onChange={this.changeExecutorSelect}
 							  >
 					        {this.renderExecutorSelectOptions()}
-					      </FormControl>
+					      </Validation.components.Select>
 						</FormGroup>
 						<FormGroup>
-							<ControlLabel>Проверяющий</ControlLabel>
-							  <FormControl 
-							  	componentClass="select" 
-							  	defaultValue={this.state.responsible}
+							<ControlLabel>Ответственный</ControlLabel>
+							  <Validation.components.Select
+							  	name='responsible'  
+							  	className='form-control' 
+							  	value={this.state.responsible}
+							  	validations={['required']}
 							  	onChange={this.changeResponsibleSelect}
 							  >
 					        {this.renderResponsibleSelectOptions()}
-					      </FormControl>
+					      </Validation.components.Select>
 						</FormGroup>
 						<FormGroup>
 							<ControlLabel>Выполнить до</ControlLabel>
 							  <DatePicker 
 							  	value={this.state.deadline}
 							  	onChange={this.changeDate}
+							  	minDate={TOMORROW}
 							  	dayLabels={['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']}
 							  	monthLabels={['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Ноябрь','Декабрь']}
 							  />
 						</FormGroup>
 						<FormGroup>
 				      <ControlLabel>Задача</ControlLabel>
-				      <FormControl 
-				      	componentClass="textarea" 
-				      	placeholder="..."
-				      	onChange={this.handleChangeTextarea}
-				      	value={this.state.text}
+				      <RichTextEditor
+				        value={this.state.text}
+				        onChange={this.changeText}
 				      />
 				    </FormGroup>
-						<Button
-						onClick={this.submit}
+						<Validation.components.Button
+							className='btn btn-default'
+
+							onClick={this.submit}
 						>
 							Добавить
-						</Button>
-					</form>
+						</Validation.components.Button>
+					</Validation.components.Form>
 				</Modal.Body>
 			</Modal>
 		);

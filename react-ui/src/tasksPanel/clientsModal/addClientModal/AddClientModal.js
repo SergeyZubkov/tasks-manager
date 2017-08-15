@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import './AddClientModal.css';
-import {Button, Modal, FormGroup, ControlLabel, FormControl} from 'react-bootstrap';
+import {Modal, FormGroup, ControlLabel} from 'react-bootstrap';
 import clientDataService from '../../../data/clientDataService';
 import ReactTelInput from 'react-telephone-input';
 import flagsCountriesSrc from '../../../flags.png';
+import Validation from 'react-validation';
 
 class AddClientModal extends Component {
 
@@ -26,7 +27,8 @@ class AddClientModal extends Component {
 		this.props.onHide();
 	}
 
-	submit = () => {
+	submit = (e) => {
+		e.preventDefault();
 		clientDataService
 		.add({
 			name: this.state.name,
@@ -34,7 +36,17 @@ class AddClientModal extends Component {
 			additionalInfo: this.state.additionalInfo
 		});
 
+		this.clearForm();
+
 		this.close();
+	}
+
+	clearForm() {
+		this.setState({
+			name: '',
+			phone: '',
+			additionalInfo: ''
+		});
 	}
 
 	changeName = (e) => {
@@ -64,12 +76,15 @@ class AddClientModal extends Component {
 					<Modal.Title> Добавить клиента </Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					<form>
+					<Validation.components.Form>
 						<FormGroup>
 							<ControlLabel>Название огранизации</ControlLabel>
-								<FormControl 
+								<Validation.components.Input 
+									name='name'
+									className='form-control'
 									type='text'
 									value={this.state.name}
+									validations={['required']}
 									onChange={this.changeName}
 								/>
 						</FormGroup>
@@ -83,19 +98,22 @@ class AddClientModal extends Component {
 						</FormGroup>
 						<FormGroup>
 							<ControlLabel>Дополнительная информация</ControlLabel>
-							<FormControl 
-								componentClass="textarea" 
+							<Validation.components.Textarea 
+								name='additionalInfo'
+								className="form-control" 
 								placeholder="..."
 								onChange={this.changeTextarea}
 								value={this.state.additionalInfo}
+								validations={['required']}
 							/>
 						</FormGroup>
-						<Button
+						<Validation.components.Button
+							className='btn btn-default'
 							onClick={this.submit}
 						>
 							Добавить
-						</Button>
-					</form>
+						</Validation.components.Button>
+					</Validation.components.Form>
 				</Modal.Body>
 			</Modal>
 		)

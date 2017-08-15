@@ -5,6 +5,10 @@ import userDataService from '../../data/userDataService';
 import taskDataService from '../../data/taskDataService';
 import clientDataService from '../../data/clientDataService';
 import DatePicker from 'react-bootstrap-date-picker';
+import Validation from 'react-validation';
+import moment from 'moment';
+
+const TOMORROW = moment().add(1, 'day').toISOString();
 
 class EditTaskModal extends Component {
 
@@ -21,9 +25,10 @@ class EditTaskModal extends Component {
 			executor: this.props.executor,
 			responsible: this.props.responsible,
 			text: this.props.text,
-			client: this.props.client,
+			client: this.props.client||'',
 			deadline: this.props.deadline
 		}
+		
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -38,6 +43,12 @@ class EditTaskModal extends Component {
 				users: users
 			});
 		});
+		this.getClients();
+
+		clientDataService.on('change', this.getClients);
+	}
+
+	getClients = () => {
 		clientDataService 
 		.getAll()
 		.then((clients) => {
@@ -51,7 +62,8 @@ class EditTaskModal extends Component {
 		this.props.onHide();
 	}
 
-	submit = () => {
+	submit = (e) => {
+		e.preventDefault();
 		const task = {
 			author: this.state.author,
 			executor: this.state.executor,
@@ -66,8 +78,10 @@ class EditTaskModal extends Component {
 	}
 
 	renderClientSelectOptions() {
-		return this.state.clients
-		.map(client => <option key={client._id} value={client._id}>{client.name}</option>)
+		let arr = this.state.clients
+		.map(client => <option key={client._id} value={client._id}>{client.name}</option>);
+		arr.push(<option key={'null'} value={''}>------</option>);
+		return arr
 	}
 
 	renderExecutorSelectOptions() {
@@ -118,41 +132,49 @@ class EditTaskModal extends Component {
 					<Modal.Title> Изменить задачу </Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					<form>
+					<Validation.components.Form>
 						<FormGroup>
 							<ControlLabel>Клиент</ControlLabel>
-									<FormControl 
-										componentClass="select" 
-										defaultValue={this.state.client}
+									<Validation.components.Select 
+								  	className='form-control'
+										value={this.state.client}
+										name='client'
+										validations={[]}
 										onChange={this.changeClientSelect}
 									>
 									{this.renderClientSelectOptions()}
-								</FormControl>
+								</Validation.components.Select>
 						</FormGroup>
 						<FormGroup>
 							<ControlLabel>Исполнитель</ControlLabel>
-								<FormControl 
-									componentClass="select" 
-									defaultValue={this.state.executor}
-									onChange={this.changeExecutorSelect}
-								>
-									{this.renderExecutorSelectOptions()}
-								</FormControl>
+							  <Validation.components.Select  
+							  	name='executor'
+							  	className='form-control'
+							  	value={this.state.executor}
+							  	validations={['required']}
+							  	onChange={this.changeExecutorSelect}
+							  >
+					        {this.renderExecutorSelectOptions()}
+					      </Validation.components.Select>
 						</FormGroup>
 						<FormGroup>
-							<ControlLabel>Проверяющий</ControlLabel>
-								<FormControl 
-									componentClass="select" 
-									defaultValue={this.state.responsible}
-									onChange={this.changeResponsibleSelect}
-								>
-									{this.renderResponsibleSelectOptions()}
-								</FormControl>
+							<ControlLabel>Ответственный</ControlLabel>
+							<ControlLabel>Ответственный</ControlLabel>
+							  <Validation.components.Select
+							  	name='responsible'  
+							  	className='form-control' 
+							  	value={this.state.responsible}
+							  	validations={['required']}
+							  	onChange={this.changeResponsibleSelect}
+							  >
+					        {this.renderResponsibleSelectOptions()}
+					      </Validation.components.Select>
 						</FormGroup>
 						<FormGroup>
 							<ControlLabel>Выполнить до</ControlLabel>
 								<DatePicker 
 									value={this.state.deadline}
+									minDate={TOMORROW}
 									onChange={this.changeDate}
 									dayLabels={['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']}
 									monthLabels={['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Ноябрь','Декабрь']}
@@ -160,19 +182,22 @@ class EditTaskModal extends Component {
 						</FormGroup>
 						<FormGroup>
 							<ControlLabel>Задача</ControlLabel>
-							<FormControl 
-								componentClass="textarea" 
-								placeholder="..."
-								onChange={this.changeTextarea}
-								value={this.state.text}
-							/>
-						</FormGroup>
-						<Button
-						onClick={this.submit}
+				      <Validation.components.Textarea  
+				      	name='text'
+				      	validations={['required']}
+				      	className='form-control'
+				      	placeholder="..."
+				      	onChange={this.handleChangeTextarea}
+				      	value={this.state.text}
+				      />
+				    </FormGroup>
+						<Validation.components.Button
+							className='btn btn-default'
+							onClick={this.submit}
 						>
 							Добавить
-						</Button>
-					</form>
+						</Validation.components.Button>
+					</Validation.components.Form>
 				</Modal.Body>
 			</Modal>
 		);

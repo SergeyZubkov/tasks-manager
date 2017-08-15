@@ -7,3 +7,11 @@ body {
 #root {
 	height: 100vh;
 }
+
+.form-error {
+  background: hsl(0, 100%, 95%);
+  color: red;
+  display: block;
+  padding: 0 10px;
+  line-height: 2.5;
+}

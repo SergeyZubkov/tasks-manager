@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import './extendValidationRules';
 import TasksPanel from './tasksPanel/TasksPanel';
 import Login from './login/Login';
 import AdminPanel from './adminPanel/AdminPanel';
