@@ -93,7 +93,7 @@ function remove(req, res) {
     }
 
 
-    return res.status(200).send('Removed Successfully');
+    return res.send(req.params.id);
   });
 }
 
@@ -106,7 +106,7 @@ function update(req, res) {
       return res.status(500).send('We failed to save for some reason');
     }
 
-    return res.status(200).send('Updated successfully');
+    return res.json(data);
   });
 }
 

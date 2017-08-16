@@ -2,9 +2,26 @@
 	
 }
 
+.user-group {
+	display: flex;
+}
+
+.user-group__label {
+	margin-right: 7px;
+}
+
+.user-group__value {
+	font-weight: bold;
+}
 
 @media (max-width: 480px) {
 	.user button {
 		font-size: 10px;
+	}
+}
+
+@media (max-width: 600px) {
+	.user-group {
+		flex-direction: column;
 	}
 }

@@ -36,13 +36,14 @@ class TasksPannel extends Component {
   }
 
   componentDidMount() {
+    clientDataService.on('change', this.getClients);
+    taskDataService.on('change', this.fetch);
+    
     this.fetch();
     this.getClients();
 
     this.setState({currentUser: userDataService.getCurrentUser()});
 
-    clientDataService.on('change', this.getClients)
-    taskDataService.on('change', this.fetch);
   }
 
   componentWillUnmount() {

@@ -1,21 +1,20 @@
 import React, { Component } from 'react';
 import './User.css';
 import {Button, Col, Row} from 'react-bootstrap';
+import EditUserModal from './editUserModal/EditUserModal';
 
 class User extends Component {
 	constructor(props) {
 		super(props);
 		
 		this.state = {
-			isEdit: false,
+			showEditUserModal: false,
 			name: this.props.name,
 			email: this.props.email,
 			password: this.props.password,
-			id: this.props.id,
-			newName: this.props.name,
-			newEmail: this.props.email,
-			newPassword: this.props.password
+			id: this.props.id
 		}
+		console.log(this.state.id)
 	}
 
 	delete = () => {
@@ -24,78 +23,40 @@ class User extends Component {
 
 	editOn = () => {
 		this.setState({
-			isEdit: true
+			showEditUserModal: true
 		});
 	}
 
-	changeName = (e) => {
-		const name = e.target.value;
+	closeEditUserModal = () => {
 		this.setState({
-			newName: name
-		});
-	}
-
-	changeEmail = (e) => {
-		const email = e.target.value;
-		this.setState({
-			newEmail: email
-		});
-	}
-
-	changePassword = (e) => {
-		const password = e.target.value;
-		this.setState({
-			newPassword: password
-		});
-	}
-
-	saveChanges = () => {
-		this.setState({
-			isEdit: false
-		});
-
-		const newData = {
-			name: this.state.newName,
-			email: this.state.newEmail,
-			password: this.state.mewPassword
-		};
-
-		const id = this.state.id;
-
-		this.props.onUpdate(id, newData);
-	}
-
-	abortChanges = () => {
-		this.setState({
-			isEdit: false
-		});
+			showEditUserModal: false
+		})
 	}
 
 	render() {
 		const {
+			id,
 			name,
 			email,
 			password,
-			newName,
-			newEmail,
-			newPassword
+			showEditUserModal
 		} = this.state;
+
 		return (
 			<li className="user list-group-item clearfix">
-				<Row 
-					style={{
-						display: `${this.state.isEdit ? 'none' : ''}`
-					}}
-				>
+				<Row>
 					<Col md={9} xs={6}>
-						<div className="user-name">
-							{name}
+						<div className="user-group">
+							<div className="user-group__label">Имя: </div>
+							<div className="user-group__value">{name}</div>
 						</div>
-						<div className="user-email">
-							{email}
+						<div className="user-group">
+							<div className="user-group__label">Эл. почта: </div>
+							<div className="user-group__value">{email}</div>
 						</div>
-						<div className="user-password">
-							{password}
+						<div className="user-group">
+							<div className="user-group__label">Пароль: </div>
+							<div className="user-group__value">{password}</div>
 						</div>
 					</Col>
 					<Col md={3} xs={6} className='text-right'>
@@ -113,46 +74,14 @@ class User extends Component {
 						</Button>
 					</Col>
 				</Row>
-				<Row 
-					style={{
-						display: `${!this.state.isEdit ? 'none' : ''}`
-					}}
-				>
-					<Col md={9} xs={6}>
-						<input 
-							className="user-name"
-							type='text'
-							value={newName}
-							onChange={this.changeName}
-						/>
-						<input 
-							className="user-email"
-							type='email'
-							value={newEmail}
-							onChange={this.changeEmail}
-						/>
-						<input 
-							className="user-password"
-							type='text'
-							value={newPassword}
-							onChange={this.changePassword}
-						/>
-					</Col>
-					<Col md={3} xs={6} className='text-right'>
-						<Button 
-							bsStyle='success'
-							onClick={this.saveChanges}
-						>
-							Принять
-						</Button>
-						<Button 
-							bsStyle='danger'
-							onClick={this.abortChanges}
-						>
-							Отменить
-						</Button>
-					</Col>
-				</Row>
+				<EditUserModal
+					show={showEditUserModal}
+					onHide={this.closeEditUserModal}
+					name={name}
+					email={email}
+					password={password}
+					id={id}
+				/>
 			</li>
 		);
 	}

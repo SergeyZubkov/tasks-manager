@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import './AddTaskModal.css';
-import {Button, Modal, FormGroup, ControlLabel} from 'react-bootstrap';
+import {Modal, FormGroup, ControlLabel} from 'react-bootstrap';
 import userDataService from '../../data/userDataService';
 import taskDataService from '../../data/taskDataService';
 import clientDataService from '../../data/clientDataService';
 import DatePicker  from 'react-bootstrap-date-picker';
 import Validation from 'react-validation';
 import moment from 'moment';
-import RichTextEditor from 'react-rte';
 
 const TOMORROW = moment().add(1, 'day').toISOString()
 
@@ -21,7 +20,7 @@ class AddTaskModal extends Component {
 			show: this.props.show,
 			users: [],
 			executor: '',
-			text: RichTextEditor.createEmptyValue(),
+			text: '',
 			client: '',
 			clients: this.props.clients,
 			deadline: TOMORROW
@@ -54,9 +53,8 @@ class AddTaskModal extends Component {
 		this.props.onHide();
 	}
 
-	changeText = (text) => {
-		console.log(text.getEditorState().currentContent());
-		this.setState({text: text});
+	changeTextarea = (e) => {
+		this.setState({text: e.target.value});
 	}
 
 	submit = (e) => {
@@ -66,7 +64,7 @@ class AddTaskModal extends Component {
 			author: this.state.user.name,
 			executor: this.state.executor,
 			responsible: this.state.responsible,
-			text: this.state.text.getEditorState(),
+			text: this.state.text,
 			column: 'Задачи',
 			date: new Date(),
 			deadline: this.state.deadline,
@@ -86,9 +84,8 @@ class AddTaskModal extends Component {
 
 	clearForm() {
 		this.setState({
-			executor: '',
-			task: '',
 			client: '',
+			text: '',
 			clients: this.props.clients,
 			deadline: TOMORROW
 		})
@@ -197,9 +194,13 @@ class AddTaskModal extends Component {
 						</FormGroup>
 						<FormGroup>
 				      <ControlLabel>Задача</ControlLabel>
-				      <RichTextEditor
-				        value={this.state.text}
-				        onChange={this.changeText}
+				      <Validation.components.Textarea
+								name='text'
+								validations={['required']}
+								className="form-control" 
+								placeholder="..."
+								value={this.state.text}
+								onChange={this.changeTextarea}
 				      />
 				    </FormGroup>
 						<Validation.components.Button

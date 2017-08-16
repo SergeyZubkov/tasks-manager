@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
-import './AddUserModal.css';
-import {Button, Modal, FormGroup, ControlLabel, FormControl} from 'react-bootstrap';
-import userDataService from '../../data/userDataService';
+import './EditUserModal.css';
+import {Button, Modal, FormGroup, ControlLabel} from 'react-bootstrap';
+import userDataService from '../../../data/userDataService';
 import Validation from 'react-validation';
 
-class AddUserModal extends Component {
+class EditUserModal extends Component {
 
   constructor(props) {
     super(props);
     
     this.state = {
       show: this.props.show,
-      name: '',
-      email: '',
-      password: ''
+      name: this.props.name,
+      email: this.props.email,
+      password: this.props.password,
+      id: this.props.id
     }
   }
 
@@ -49,7 +50,7 @@ class AddUserModal extends Component {
     };
 
     userDataService
-    .addUser(user);
+    .updateUser(this.state.id, user);
 
     this.setState({
       name: '',
@@ -125,4 +126,4 @@ class AddUserModal extends Component {
   }
 }
 
-export default AddUserModal;
+export default EditUserModal;

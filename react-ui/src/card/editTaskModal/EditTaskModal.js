@@ -68,8 +68,16 @@ class EditTaskModal extends Component {
 			author: this.state.author,
 			executor: this.state.executor,
 			responsible: this.state.responsible,
-			text: this.state.text 
+			text: this.state.text,
+			deadline: this.state.deadline
 		};
+
+		if (this.state.client) {
+			task.client = this.state.client;
+		} else {
+			task.client = '';
+		}
+
 		const id = this.state._id;
 		taskDataService
 		.update(id, task);
@@ -187,7 +195,7 @@ class EditTaskModal extends Component {
 				      	validations={['required']}
 				      	className='form-control'
 				      	placeholder="..."
-				      	onChange={this.handleChangeTextarea}
+				      	onChange={this.changeTextarea}
 				      	value={this.state.text}
 				      />
 				    </FormGroup>
@@ -195,7 +203,7 @@ class EditTaskModal extends Component {
 							className='btn btn-default'
 							onClick={this.submit}
 						>
-							Добавить
+							Изменить
 						</Validation.components.Button>
 					</Validation.components.Form>
 				</Modal.Body>

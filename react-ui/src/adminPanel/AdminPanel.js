@@ -5,7 +5,7 @@ import User from './user/User';
 import {Button,Grid, Row} from 'react-bootstrap';
 import userDataService from '../data/userDataService';
 
-class AdminPannel extends Component {
+class AdminPanel extends Component {
 	constructor(props) {
 		super(props);
 		
@@ -18,8 +18,9 @@ class AdminPannel extends Component {
 	}
 
 	componentDidMount() {
-		this.fetch();
 		userDataService.on('change', this.fetch);
+		
+		this.fetch();
 	}
 
 	componentWillUnmount() {
@@ -65,6 +66,7 @@ class AdminPannel extends Component {
 		return (
 			<Grid className="admin-panel">
 				<Row>
+					<div className="admin-panel__app-link"><a href="/"> Task Mangaer </a></div>
 					<h2>Панель администратора</h2>
 					<hr></hr>
 					<h3>Пользователи: 
@@ -101,4 +103,4 @@ class AdminPannel extends Component {
 	}
 }
 
-export default AdminPannel;
+export default AdminPanel;

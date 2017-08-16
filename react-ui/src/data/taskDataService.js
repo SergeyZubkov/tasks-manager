@@ -1,24 +1,36 @@
 import axios from 'axios';
 import EventEmitter from 'browser-event-emitter';
+import _ from 'lodash';
 
 class TaskDataService extends EventEmitter {
 
+	constructor() {
+		super();
+
+		this._tasks = [];
+	}
+
 	getTasks() {
-		return axios.get('/api/tasks')
-		.then(response => {
-			console.log(response);
-			return response.data;
-		})
-		.catch(error => {
-			console.log(error);
-		});
+		if (this._tasks.length === 0) {
+			return axios.get('/api/tasks')
+			.then(response => {
+				return this._tasks = response.data;
+			})
+			.catch(error => {
+				console.log(error);
+			});
+		} else {
+			return new Promise((resolve, reject) => {
+				return resolve(this._tasks);
+			})
+		}
 	}
 
 	addTask(task) {
-		axios.post('/api/tasks', task)
+		return axios.post('/api/tasks', task)
 		.then(response => {
+			this._tasks.push(response.data)
 			this.emit('change');
-			return response;
 		})
 		.catch(error => {
 			console.log(error);
@@ -26,12 +38,13 @@ class TaskDataService extends EventEmitter {
 	}
 
 	remove(id) {
-		console.log(id);
 		return axios.delete('/api/tasks/'+ id)
 		.then(response => {
-			console.log(response);
+			const taskDeletedId = id;
+			this._tasks = _.filter(this._tasks, (task) => {
+				return task._id !== taskDeletedId;
+			});
 			this.emit('change');
-			return true;
 		})
 		.catch(error => {
 			console.log(error);
@@ -39,10 +52,16 @@ class TaskDataService extends EventEmitter {
 	}
 
 	update(id, newData) {
+		console.log(newData);
 		return axios.put('/api/tasks/'+ id, newData)
 		.then(response => {
+			let updatedTask = response.data;
+			console.log(updatedTask);
+			_.extend(
+				_.find(this._tasks, { _id: updatedTask._id }), 
+				updatedTask);
+		
 			this.emit('change');
-			return true;
 		})
 		.catch(error => {
 			console.log(error);
@@ -52,8 +71,10 @@ class TaskDataService extends EventEmitter {
 	addComment(id, comment) {
 		return axios.post('/api/tasks/'+ id +'/comment', comment)
 		.then(response => {
+			_.find(this._tasks, {_id: id})
+			.comments
+			.push(comment);
 			this.emit('change');
-			return true;
 		})
 		.catch(error => {
 			console.log(error);

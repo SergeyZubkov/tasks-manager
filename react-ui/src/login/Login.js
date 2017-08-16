@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import './Login.css';
-import {Grid, Row, Col, Panel, Button, FormGroup, ControlLabel, FormControl} from 'react-bootstrap';
+import {Grid, Row, Col, Panel, Button, FormGroup, ControlLabel} from 'react-bootstrap';
 import userDataService from '../data/userDataService';
 import {Redirect} from 'react-router-dom';
 import AuthService from '../AuthService';
+import Validation from 'react-validation';
 
 class Login extends Component {
 	constructor(props) {
@@ -26,7 +27,8 @@ class Login extends Component {
 		this.setState({email: email});
 	}
 
-	submit = () => {
+	submit = (e) => {
+		e.preventDefault();
 		const {email, password} = this.state;
 		userDataService
 		.login({email, password})
@@ -54,21 +56,27 @@ class Login extends Component {
 						<Col md={6} mdOffset={3}>
 							<Panel>
 								<h2> Вход </h2>
-								<form>
+								<Validation.components.Form>
 									<FormGroup>
 										<ControlLabel> Email </ControlLabel>
-										<FormControl
+										<Validation.components.Input
+											name='email'
+											className='form-control'
 											type='email'
 											value={this.state.email}
 											onChange={this.changeEmail}
+											validations={['required', 'email']}
 										/>
 									</FormGroup>
 									<FormGroup>
 										<ControlLabel> Пароль </ControlLabel>
-										<FormControl
+										<Validation.components.Input
+											name='password'
+											className='form-control'
 											type='password'
 											value={this.state.password}
 											onChange={this.changePassword}
+											validations={['required']}
 										/>
 									</FormGroup>
 									<Button 
@@ -77,7 +85,7 @@ class Login extends Component {
 									>
 										Войти
 									</Button>
-								</form>
+								</Validation.components.Form>
 							</Panel>
 						</Col>
 					</Row>

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import EventEmitter from 'browser-event-emitter';
+import _ from 'lodash';
 
 class DataService extends EventEmitter {
 
@@ -7,6 +8,7 @@ class DataService extends EventEmitter {
 		super();
 
 		this._currentUser = null;
+		this._users = [];
 	}
 
 	getCurrentUser() {
@@ -39,20 +41,26 @@ class DataService extends EventEmitter {
 	}
 
 	getUsers() {
-		return axios.get('/api/users')
-		.then(response => {
-			return response.data;
-		})
-		.catch(error => {
-			console.log(error);
-		});
+		if (this._users.length === 0) {
+			return axios.get('/api/users')
+			.then(response => {
+				return this._users = response.data;
+			})
+			.catch(error => {
+				console.log(error);
+			});
+		} else {
+			return new Promise((resolve, reject) => {
+				return resolve(this._users);
+			})
+		}
 	}
 
 	addUser(user) {
 		return axios.post('/api/users', user)
 		.then(response => {
+			this._users.push(response.data)
 			this.emit('change');
-			return true
 		})
 		.catch(error => {
 			console.log(error);
@@ -62,8 +70,11 @@ class DataService extends EventEmitter {
 	deleteUser(id) {
 		return axios.delete('/api/users/'+ id)
 		.then(response => {
+			const userDeletedId = response.data;
+			this._users = _.filter(this._users, (user) => {
+				return user._id !== userDeletedId;
+			});
 			this.emit('change');
-			return true;
 		})
 		.catch(error => {
 			console.log(error);
@@ -73,8 +84,13 @@ class DataService extends EventEmitter {
 	updateUser(id, newData) {
 		return axios.put('/api/users/'+ id, newData)
 		.then(response => {
+			let updatedUser = _.extend({_id: id}, newData);
+
+			_.extend(
+				_.find(this._users, { _id: updatedUser._id }), 
+				updatedUser);
+		
 			this.emit('change');
-			return true;
 		})
 		.catch(error => {
 			console.log(error);

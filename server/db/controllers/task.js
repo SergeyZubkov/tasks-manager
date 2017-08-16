@@ -47,7 +47,12 @@ function add(req, res) {
     console.log('create Task');
     console.log(task);
 
-    return res.status(200).send('OK');
+    Task
+    .findOne({_id: task._id})
+    .populate('client')
+    .exec((err, task) => {
+      return res.json(task);
+    });
   });
 }
 
@@ -57,6 +62,7 @@ function add(req, res) {
 function update(req, res) {
   const query = { _id: req.params.id };
   const data = req.body;
+
   console.log(data);
     Task.findOneAndUpdate(query, data, (err) => {
       if (err) {
@@ -64,7 +70,25 @@ function update(req, res) {
         return res.status(500).send('We failed to save for some reason');
       }
 
-      return res.status(200).send('Updated successfully');
+      if (!data.client) {
+        Task
+        .findOne(query, (err, task) => {
+           
+           delete task.client;
+
+           task.save();
+
+           return res.json(task);
+        });
+      } else {
+        Task
+        .findOne(query)
+        .populate('client')
+        .exec((err, task) => {
+          return res.json(task);
+        });      
+      }
+
     });
 }
 
@@ -90,19 +114,21 @@ function addComment(req, res) {
   console.log('add Comment');
   console.log(query);
   const comment = req.body;
-    Task.findOne(query, (err, task) => {
-      if (err) {
-        console.log('Error on save!');
-        return res.status(500).send('We failed to save for some reason');
-      }
+  Task
+  .findOne(query)
+  .exec((err, task) => {
+    if (err) {
+      console.log('Error on save!');
+      return res.status(500).send('We failed to save for some reason');
+    }
 
-      task.comments.push(comment);
+    task.comments.push(comment);
 
-      console.log(task);
+    console.log(task);
 
-      task.save(function(err) {
-        return res.status(200).send('Updated successfully');  
-      });
+    task.save(function(err) {
+      return res.json(task);  
+    });
   });
 }
 
