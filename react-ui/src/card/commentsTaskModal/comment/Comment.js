@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import './Comment.css';
 import moment from 'moment';
+import Linkify from 'react-linkify';
 
 class Comment extends Component {
 
@@ -17,7 +18,9 @@ class Comment extends Component {
 				<div
 					className="comment__body"
 				>
-					{this.props.text}
+					<Linkify>
+						{this.props.text}
+					</Linkify>
 				</div>
 				<div
 					className="comment__footer"

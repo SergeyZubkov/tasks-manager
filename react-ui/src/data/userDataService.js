@@ -96,6 +96,12 @@ class DataService extends EventEmitter {
 			console.log(error);
 		})
 	}
+
+	getUserRolesForTask(task) {
+		return _.map(_.pick(task, ['author', 'executor', 'responsible']), 
+			v => v === this._currentUser.name
+		);
+	}
 }
 
 const dataService = new DataService();

@@ -32,7 +32,7 @@ module.exports = class Notify {
 			  from: '',
 			  to: executor.email,
 			  subject: 'Была созданна новая задача',
-			  text: 'Была созданна новая задача вы назначены исполнителем'
+			  html: "<p>Была созданна новая задача: </p><p>" + task.text + "</p><p>Вы назначены исполнителем</p>"
 			};
 
 			send(mailOptions);
@@ -45,43 +45,64 @@ module.exports = class Notify {
 			  from: '',
 			  to: responsible.email,
 			  subject: 'Была созданна новая задача',
-			  text: "Была созданна новая задача вы назначены ответственным"
+			  html: "<p>Была созданна новая задача: </p><p>" + task.text + "</p><p>Вы назначены ответственным</p>"
 			};
 
 			send(mailOptions);
 		})
 	}
-	static wasEditedTask(task) {
-		User
-		.findOne({name: task.executor})
-		.exec(function(err, executor) {
-			var mailOptions = {
-			  from: '',
-			  to: executor.email,
-			  subject: 'Задача была изменена',
-			  text: 'Задача была изменена',
-			 	html: "<p>" + task.text + "</p>"
-			};
+	static wasEditedTask(editedTask, originalTask) {
+		let addressList = [
+			editedTask.executor,
+			editedTask.responsible
+		];
 
-			send(mailOptions);
-		});
+		if (originalTask) {
+			if (editedTask.executor !== originalTask.executor){
+				addressList.push(originalTask.executor);
+			}
+			if (editedTask.responsible !== originalTask.responsible){
+				addressList.push(originalTask.responsible);
+			}
+		}
+		
+		addressList.forEach(userName => {
+			User
+			.findOne({name: userName})
+			.exec(function(err, user) {
+				let mailOptions = {
+				  from: '',
+				  to: user.email,
+				  subject: 'Задача была изменена',
+				  text: 'Задача была изменена',
+				 	html: "<p>" + editedTask.text + "</p>"
+				};
 
-		User
-		.findOne({name: task.responsible})
-		.exec(function(err, responsible) {
-			var mailOptions = {
-			  from: '',
-			  to: responsible.email,
-			  subject: 'Задача была изменена',
-			  text: "Задача была изменена",
-			  html: "<p>" + task.text + "</p>"
-			};
-
-			send(mailOptions);
+				send(mailOptions);
+			});
 		});
 	}
 	static wasDeletedTask(task) {
+		let addressList = [
+			task.executor,
+			task.responsible
+		];
 
+		addressList.forEach(userName => {
+			User
+			.findOne({name: userName})
+			.exec(function(err, user) {
+				let mailOptions = {
+				  from: '',
+				  to: user.email,
+				  subject: 'Задача была удалена',
+				  text: 'Задача была удалена',
+				 	html: "<p>" + task.text + "</p>"
+				};
+
+				send(mailOptions);
+			});
+		});
 	}
 	static wasMovedTask(task) {
 
@@ -90,6 +111,26 @@ module.exports = class Notify {
 
 	}
 	static wasCommentedTask(task) {
+		let addressList = [
+			task.author,
+			task.executor,
+			task.responsible
+		];
 
+		addressList.forEach(userName => {
+			User
+			.findOne({name: userName})
+			.exec(function(err, user) {
+				let mailOptions = {
+				  from: '',
+				  to: user.email,
+				  subject: 'У задачи появился новый комментарий',
+				  text: 'У задачи появился новый коммeнтарий',
+				 	html: "<p>" + task.text + "</p>"
+				};
+
+				send(mailOptions);
+			});
+		});
 	}
 }

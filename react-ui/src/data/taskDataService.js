@@ -51,12 +51,10 @@ class TaskDataService extends EventEmitter {
 		});
 	}
 
-	update(id, newData) {
-		console.log(newData);
-		return axios.put('/api/tasks/'+ id, newData)
+	update(id, editedData, originalData) {
+		return axios.put('/api/tasks/'+ id, {editedData: editedData, originalData: originalData})
 		.then(response => {
 			let updatedTask = response.data;
-			console.log(updatedTask);
 			_.extend(
 				_.find(this._tasks, { _id: updatedTask._id }), 
 				updatedTask);

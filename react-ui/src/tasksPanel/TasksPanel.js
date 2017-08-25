@@ -28,6 +28,7 @@ class TasksPannel extends Component {
       ],
       tasksCards: [],
       doingCards: [],
+      pendingCards: [],
       completeCards: [],
       freezingCards: [],
       tasks: [],

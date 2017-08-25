@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import './Card.css';
+import _ from 'lodash';
+import UserDataService from '../data/userDataService';
 
 import Dropdown from '../dropdown/Dropdown';
 import FontAwesome from 'react-fontawesome';  
@@ -10,6 +12,7 @@ import SelectColumnTaskModal from './selectColumnTaskModal/SelectColumnTaskModal
 import CommentsTaskModal from './commentsTaskModal/CommentsTaskModal';
 import ClientInfoModal from '../tasksPanel/clientInfoModal/ClientInfoModal';
 import DeadlineProgress from './deadlineProgress/DeadlineProgress';
+import Linkify from 'react-linkify';
 
 class Card extends Component {
   constructor(props) {
@@ -31,6 +34,24 @@ class Card extends Component {
     this.setState({
       showEditTaskModal: false
     });
+  }
+
+  getColumnsForTaskMove = () => {
+    const [
+      ,
+      userIsExecutor,
+      userIsResponsible
+    ] = UserDataService.getUserRolesForTask(this.props);
+
+    console.log(userIsResponsible);
+
+    if (userIsExecutor) {
+      return ['Выполняются','Завершенные', 'Замороженные']; 
+    } else if (userIsResponsible) {
+      return ['Выполняются', 'Замороженные']
+    } else {
+      return [];
+    }
   }
 
   editTask = () => {
@@ -87,12 +108,16 @@ class Card extends Component {
       deadline
     } = this.props;
 
-    console.log(client);
-
     const {
       disableMenu,
-      disableCommentsButton
+      disableCommentsButton,
     } = this.props;
+
+    const [
+      userIsAuthor,
+      userIsExecutor,
+      userIsResponsible
+    ] = UserDataService.getUserRolesForTask(this.props);
     const dropdownTitle = <FontAwesome name='ellipsis-v' />;
     return (
       <div className="card">
@@ -110,27 +135,43 @@ class Card extends Component {
           </div>
           <div
             style={{
-              display: disableMenu ? 'none' : ''
+              display: disableMenu||!userIsAuthor&&!userIsExecutor&&!userIsResponsible ? 'none' : ''
             }}
           >
-            <Dropdown 
+            <Dropdown   
               className='card__header-dropdown'
               title={dropdownTitle}
             >
-              <div onClick={this.replaceTask}>
+              <div 
+                style={{
+                  display: userIsResponsible|| userIsExecutor
+                  ? '' : 'none'
+                }}
+                onClick={this.replaceTask}>
                 Переместить
               </div>
-              <div onClick={this.editTask}>
+              <div 
+                style={{
+                  display: userIsAuthor ? '' : 'none'
+                }}
+                onClick={this.editTask}
+              >
                 Редактировать
               </div>
-              <div onClick={this.deleteTask}>
+              <div 
+                style={{
+                  display: userIsAuthor ? '' : 'none'
+                }}
+                onClick={this.deleteTask}>
                 Удалить
               </div>
             </Dropdown>
           </div>
         </div>
         <div className="card__body">
-          {text}
+          <Linkify>
+            {text}
+          </Linkify>
         </div>
         <div className="deadline">
           <i>выполнить до</i> {moment(deadline).format("DD/MM/YY")}
@@ -166,6 +207,7 @@ class Card extends Component {
           onHide={this.closeSelectColumnTaskModal}
           id={_id}
           column={column}
+          columns={this.getColumnsForTaskMove()}
         />
         <CommentsTaskModal
           show={this.state.showCommentsTaskModal}

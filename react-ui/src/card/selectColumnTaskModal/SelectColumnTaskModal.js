@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './SelectColumnTaskModal.css';
 import {Button, Modal, FormGroup, ControlLabel, FormControl} from 'react-bootstrap';
-import userDataService from '../../data/userDataService';
 import taskDataService from '../../data/taskDataService';
 
 class SelectColumnTaskModal extends Component {
@@ -11,28 +10,13 @@ class SelectColumnTaskModal extends Component {
 		
 		this.state = {
 			_id: this.props.id,
-			column: this.props.column,
-			columns: [
-        "Задачи",
-        "Выполняются",
-        "Завершенные",
-        "Замороженные"
-      ]
+			column: this.props.columns[0],
+			columns: this.props.columns
 		}
 	}
 
 	componentWillReceiveProps(nextProps) {
 		this.setState({show: nextProps.show});
-	}
-
-	componentDidMount() {
-		userDataService
-		.getUsers()
-		.then((users) => {
-			this.setState({
-				users: users
-			});
-		});
 	}
 
 	close = () => {
@@ -61,6 +45,7 @@ class SelectColumnTaskModal extends Component {
 	}
 
 	render() {
+
 		return (
 			<Modal 
 				className="add-task-modal"

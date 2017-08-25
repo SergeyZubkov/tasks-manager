@@ -18,13 +18,11 @@ function getAll(req, res) {
 			.find({})
 			.populate('client')
 			.exec((err, tasks) => {
-				console.log(tasks)
 				if (err) {
 					console.log('Error in first query');
 					return res.status(500).send('Something went wrong getting the data');
 				}
 				if (tasks) {
-					console.log(tasks);
 					return res.json(tasks)
 				}
 				
@@ -63,16 +61,18 @@ function add(req, res) {
  */
 function update(req, res) {
 	const query = { _id: req.params.id };
-	const data = req.body;
+	const {
+		editedData,
+		originalData
+	} = req.body;
 
-	console.log(data);
-		Task.findOneAndUpdate(query, data, (err) => {
+		Task.findOneAndUpdate(query, editedData, (err) => {
 			if (err) {
 				console.log('Error on save!');
 				return res.status(500).send('We failed to save for some reason');
 			}
-
-			if (!data.client) {
+			
+			if (!editedData.client) {
 				Task
 				.findOne(query, (err, task) => {
 					 
@@ -83,8 +83,8 @@ function update(req, res) {
 							console.log('Error on save!');
 							return res.status(500).send('We failed to save for some reason');
 						}
-						console.log('deleted client');
-						Notify.wasEditedTask(savedTask);
+
+						Notify.wasEditedTask(savedTask, originalData);
 
 						return res.json(savedTask);
 					});
@@ -94,12 +94,12 @@ function update(req, res) {
 				.findOne(query)
 				.populate('client')
 				.exec((err, task) => {
-					if (err, task) {
+					if (err) {
 						console.log('Error on save!');
 						return res.status(500).send('We failed to save for some reason');
 					}
 
-					Notify.wasEditedTask(task);
+					Notify.wasEditedTask(editedData, originalData);
 
 					return res.json(task);
 				});      
@@ -120,6 +120,8 @@ function remove(req, res) {
 			return res.status(500).send('We failed to delete for some reason');
 		}
 
+		Notify.wasDeletedTask(task);
+
 		return res.status(200).send('Removed Successfully');
 	});
 }
@@ -139,9 +141,8 @@ function addComment(req, res) {
 
 		task.comments.push(comment);
 
-		console.log(task);
-
 		task.save(function(err) {
+			Notify.wasCommentedTask(task);			
 			return res.json(task);  
 		});
 	});

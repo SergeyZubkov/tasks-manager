@@ -26,9 +26,18 @@ class EditTaskModal extends Component {
 			responsible: this.props.responsible,
 			text: this.props.text,
 			client: this.props.client||'',
-			deadline: this.props.deadline
+			deadline: this.props.deadline,
+			originalTask: {
+				_id: this.props._id,
+				date: this.props.date,
+				author: this.props.author,
+				executor: this.props.executor,
+				responsible: this.props.responsible,
+				text: this.props.text,
+				client: this.props.client||'',
+				deadline: this.props.deadline
+			}
 		}
-		
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -37,7 +46,7 @@ class EditTaskModal extends Component {
 
 	componentDidMount() {
 		userDataService
-		.getUsers()
+		.getUsers()	
 		.then((users) => {
 			this.setState({
 				users: users
@@ -64,7 +73,7 @@ class EditTaskModal extends Component {
 
 	submit = (e) => {
 		e.preventDefault();
-		const task = {
+		const editedTask = {
 			author: this.state.author,
 			executor: this.state.executor,
 			responsible: this.state.responsible,
@@ -73,14 +82,14 @@ class EditTaskModal extends Component {
 		};
 
 		if (this.state.client) {
-			task.client = this.state.client;
+			editedTask.client = this.state.client;
 		} else {
-			task.client = '';
+			editedTask.client = '';
 		}
 
 		const id = this.state._id;
 		taskDataService
-		.update(id, task);
+		.update(id, editedTask, this.state.originalTask);
 		
 		this.close();
 	}
