@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './EditTaskModal.css';
-import {Button, Modal, FormGroup, ControlLabel, FormControl} from 'react-bootstrap';
+import {Button, Modal, FormGroup, ControlLabel, FormControl, Checkbox} from 'react-bootstrap';
 import userDataService from '../../data/userDataService';
 import taskDataService from '../../data/taskDataService';
 import clientDataService from '../../data/clientDataService';
@@ -17,6 +17,8 @@ class EditTaskModal extends Component {
 		
 		this.state = {
 			show: this.props.show,
+			disabledPriorityInput: this.props.priority ? false : true,
+			column: this.props.column,
 			clients: [],
 			users: [],
 			_id: this.props._id,
@@ -27,21 +29,18 @@ class EditTaskModal extends Component {
 			text: this.props.text,
 			client: this.props.client||'',
 			deadline: this.props.deadline,
-			originalTask: {
-				_id: this.props._id,
-				date: this.props.date,
-				author: this.props.author,
-				executor: this.props.executor,
-				responsible: this.props.responsible,
-				text: this.props.text,
-				client: this.props.client||'',
-				deadline: this.props.deadline
-			}
+			priority: this.props.priority,
 		}
 	}
 
 	componentWillReceiveProps(nextProps) {
-		this.setState({show: nextProps.show});
+		this.setState(
+			{
+				show: nextProps.show, 
+				disabledPriorityInput: nextProps.priority ? false : true,
+				...nextProps
+			}
+		);
 	}
 
 	componentDidMount() {
@@ -68,29 +67,46 @@ class EditTaskModal extends Component {
 	}
 
 	close = () => {
+
 		this.props.onHide();
+	}
+
+	resetForm = () => {
+		this.setState({
+			disabledPriorityInput: this.props.priority ? false : true,
+			_id: this.props._id,
+			author: this.props.author,
+			executor: this.props.executor,
+			responsible: this.props.responsible,
+			text: this.props.text,
+			client: this.props.client||'',
+			deadline: this.props.deadline,
+			priority: this.props.priority
+		})
 	}
 
 	submit = (e) => {
 		e.preventDefault();
 		const editedTask = {
+			_id: this.props._id,
 			author: this.state.author,
 			executor: this.state.executor,
 			responsible: this.state.responsible,
 			text: this.state.text,
-			deadline: this.state.deadline
+			deadline: this.state.deadline ,
+			priority: this.state.priority
 		};
 
 		if (this.state.client) {
 			editedTask.client = this.state.client;
 		} else {
-			editedTask.client = '';
+			editedTask.client = undefined;
 		}
 
 		const id = this.state._id;
 		taskDataService
 		.update(id, editedTask, this.state.originalTask);
-		
+
 		this.close();
 	}
 
@@ -136,12 +152,45 @@ class EditTaskModal extends Component {
 		this.setState({deadline, deadlineFormatted})
 	}
 
+	changePriority = (e) => {
+		const priority = e.target.value;
+		this.setState({priority});
+	}
+
+	changeAvailabilityPriorityInput = () => {
+		let disabledPriorityInput = !this.state.disabledPriorityInput;
+
+		if (disabledPriorityInput) {
+			this.setState({priority: 0})
+		} else {
+			if (this.props.priority) {
+				this.setState({priority: this.props.priority})
+			} else {				
+				this.setDefaultPriorityValue();
+			}
+		}
+
+		this.setState({disabledPriorityInput});
+	}
+
+	setDefaultPriorityValue() {
+		const tasksExecutor = taskDataService.getAllTasksForExecutor(this.state.executor);
+
+		let defaultPriority = Math.max(...tasksExecutor
+			.map(t => t.priority||0)
+		) + 1;
+
+		this.setState({priority: defaultPriority})
+		console.log(this.state.priority);
+	}
+
 	render() {
 		return (
 			<Modal 
 				className="add-task-modal"
 				show={this.state.show}
 				onHide={this.props.onHide}
+				onExited={this.resetForm}
 			>
 				<Modal.Header 
 					closeButton
@@ -176,7 +225,6 @@ class EditTaskModal extends Component {
 						</FormGroup>
 						<FormGroup>
 							<ControlLabel>Ответственный</ControlLabel>
-							<ControlLabel>Ответственный</ControlLabel>
 							  <Validation.components.Select
 							  	name='responsible'  
 							  	className='form-control' 
@@ -196,6 +244,35 @@ class EditTaskModal extends Component {
 									dayLabels={['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']}
 									monthLabels={['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Ноябрь','Декабрь']}
 								/>
+						</FormGroup>
+						<FormGroup
+						 	style={{
+                display: this.state.column === 'Завершенные' || this.state.column === 'Замороженные'
+                ? 'none' : ''
+              }}
+						>
+							<ControlLabel>Приоритет</ControlLabel>
+								{this.props.priority ? 
+									<Checkbox
+										onChange={this.changeAvailabilityPriorityInput}
+									>
+										Убрать приоритет
+									</Checkbox> :
+									<Checkbox
+										onChange={this.changeAvailabilityPriorityInput}
+									>
+										Установить приоритет
+									</Checkbox>
+								}
+							  <Validation.components.Input
+							  	type='number'
+							  	name='priority' 
+							  	validations={[]} 
+							  	className='form-control' 
+							  	value={this.state.priority}
+							  	onChange={this.changePriority}
+							  	disabled={this.state.disabledPriorityInput}
+							  />
 						</FormGroup>
 						<FormGroup>
 							<ControlLabel>Задача</ControlLabel>

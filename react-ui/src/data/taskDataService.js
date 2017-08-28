@@ -1,6 +1,7 @@
 import axios from 'axios';
 import EventEmitter from 'browser-event-emitter';
 import _ from 'lodash';
+import moment from 'moment-timezone';
 
 class TaskDataService extends EventEmitter {
 
@@ -27,9 +28,11 @@ class TaskDataService extends EventEmitter {
 	}
 
 	addTask(task) {
+		console.log(task)
 		return axios.post('/api/tasks', task)
 		.then(response => {
-			this._tasks.push(response.data)
+			this._tasks = response.data;
+			console.log(this._tasks)
 			this.emit('change');
 		})
 		.catch(error => {
@@ -51,13 +54,23 @@ class TaskDataService extends EventEmitter {
 		});
 	}
 
-	update(id, editedData, originalData) {
-		return axios.put('/api/tasks/'+ id, {editedData: editedData, originalData: originalData})
+	update(id, editedData) {
+		console.log(editedData)
+		const originalData = _.find(
+			this._tasks,
+			{_id: id}
+		)
+
+		editedData = Object.assign({}, originalData, editedData);
+
+		delete editedData.date
+
+		return axios.put('/api/tasks/'+ id, {editedData, originalData})
 		.then(response => {
-			let updatedTask = response.data;
-			_.extend(
-				_.find(this._tasks, { _id: updatedTask._id }), 
-				updatedTask);
+			const newTask = _.find(response.data, {_id: id});
+			console.log(newTask)
+			
+			this._tasks = response.data;
 		
 			this.emit('change');
 		})
@@ -77,6 +90,10 @@ class TaskDataService extends EventEmitter {
 		.catch(error => {
 			console.log(error);
 		})
+	}
+
+	getAllTasksForExecutor(executor) {
+		return this._tasks.filter(task => task.executor === executor);
 	}
 }
 

@@ -24,6 +24,7 @@ class Card extends Component {
       showCommentsTaskModal: false,
       showClientInfoModal: false
     }
+
   }
 
   deleteTask = () => {
@@ -48,7 +49,7 @@ class Card extends Component {
     if (userIsExecutor) {
       return ['Выполняются','Завершенные', 'Замороженные']; 
     } else if (userIsResponsible) {
-      return ['Выполняются', 'Замороженные']
+      return ['Замороженные']
     } else {
       return [];
     }
@@ -105,7 +106,9 @@ class Card extends Component {
       column,
       _id,
       client,
-      deadline
+      deadline,
+      priority,
+      dateClose
     } = this.props;
 
     const {
@@ -119,10 +122,29 @@ class Card extends Component {
       userIsResponsible
     ] = UserDataService.getUserRolesForTask(this.props);
     const dropdownTitle = <FontAwesome name='ellipsis-v' />;
+
+    let priorityView = null;
+    let clientView = null;
+
+    if (priority) {
+      priorityView = <div className="card__priority">{priority}</div>
+    }
+    if (client) {
+      clientView = (
+        <div
+          className="card__client"
+          onClick={this.showClientInfo}
+        >
+          {client.name}
+        </div>
+      )
+    }
+
     return (
       <div className="card">
         <div className="card__header">
-          <div>
+          {priorityView}
+          <div className='card__header-wrapper'>
             <div className="author">
               <Label bsStyle='primary'> создал: </Label>  {author}
             </div>
@@ -175,16 +197,24 @@ class Card extends Component {
         </div>
         <div className="deadline">
           <i>выполнить до</i> {moment(deadline).format("DD/MM/YY")}
-          <DeadlineProgress fromDate={new Date(date)} toDate={new Date(deadline)} />
+          <DeadlineProgress
+            show={column !== 'Завершенные'&&column !== 'Замороженные'}
+            fromDate={new Date(date)} 
+            toDate={new Date(deadline)} 
+          />
+          <i
+            style={{
+              display: column === 'Завершенные'||column === 'Замороженные' ?
+                '': 'none'
+            }}
+          >
+            {column === 'Завершенные' ? "завершена " : "заморожена "}
+            {moment(dateClose).format("DD/MM/YY")}
+          </i>
         </div>
         <div className="card__footer">
           {moment(date).format("DD/MM/YY HH:mm")}
-          <div
-            className="card__client"
-            onClick={this.showClientInfo}
-          >
-            {client ? client.name : ''}
-          </div>
+          {clientView}
           <div 
             className="card__comments"
             onClick={this.openComments}
@@ -200,6 +230,7 @@ class Card extends Component {
         <EditTaskModal
           show={this.state.showEditTaskModal}
           onHide={this.closeEditTaskModal}
+          column={column}
           {...this.props}
         />
         <SelectColumnTaskModal

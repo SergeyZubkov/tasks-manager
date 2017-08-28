@@ -12,6 +12,7 @@
     "browser-event-emitter": "^1.0.2",
     "jwt-decode": "^2.2.0",
     "moment": "^2.18.1",
+    "moment-timezone": "^0.5.13",
     "react": "^15.4.2",
     "react-bootstrap": "^0.31.1",
     "react-bootstrap-date-picker": "^5.1.0",

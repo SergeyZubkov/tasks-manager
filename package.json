@@ -6,7 +6,7 @@
     "node": "6.11.x"
   },
   "scripts": {
-    "start": "node server",
+    "start": "nodemon server",
     "heroku-postbuild": "cd react-ui/ && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },
   "cacheDirectories": [
@@ -19,8 +19,11 @@
     "express": "^4.14.1",
     "jsonwebtoken": "^7.4.2",
     "merge": "^1.2.0",
+    "moment-timezone": "^0.5.13",
     "mongoose": "^4.10.8",
+    "mongoose-autopopulate": "^0.6.0",
     "mongoose-timezone": "^1.1.0",
+    "node-gyp": "^3.6.2",
     "nodemailer": "^4.0.1",
     "passport": "^0.3.2",
     "passport-jwt": "^2.2.1",

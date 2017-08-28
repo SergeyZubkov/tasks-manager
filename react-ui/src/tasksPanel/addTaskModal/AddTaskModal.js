@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './AddTaskModal.css';
-import {Modal, FormGroup, ControlLabel} from 'react-bootstrap';
+import {Modal, FormGroup, ControlLabel, Checkbox} from 'react-bootstrap';
 import userDataService from '../../data/userDataService';
 import taskDataService from '../../data/taskDataService';
 import clientDataService from '../../data/clientDataService';
@@ -14,16 +14,21 @@ class AddTaskModal extends Component {
 
 	constructor(props) {
 		super(props);
-		
+
+		const currentUser = userDataService.getCurrentUser().name;
+
 		this.state = {
-			user: userDataService.getCurrentUser(),
+			user: currentUser,
 			show: this.props.show,
 			users: [],
-			executor: '',
+			executor: currentUser,
+			responsible: currentUser,
 			text: '',
 			client: '',
 			clients: this.props.clients,
-			deadline: TOMORROW
+			deadline: TOMORROW,
+			disabledPriorityInput: true,
+			priority: 0
 		}
 	}
 
@@ -41,9 +46,6 @@ class AddTaskModal extends Component {
 		.then((users) => {
 			this.setState({
 				users: users,
-				executor: users[0].name,
-				author: '',
-				responsible: users[0].name
 			});
 		});
 	}
@@ -61,13 +63,14 @@ class AddTaskModal extends Component {
 		e.preventDefault();
 
 		const task = {
-			author: this.state.user.name,
+			author: this.state.user,
 			executor: this.state.executor,
 			responsible: this.state.responsible,
 			text: this.state.text,
 			column: 'Задачи',
 			date: new Date(),
-			deadline: this.state.deadline,
+			deadline: new Date(this.state.deadline),
+			priority: this.state.priority
 		};
 
 		if (this.state.client) {
@@ -87,7 +90,9 @@ class AddTaskModal extends Component {
 			client: '',
 			text: '',
 			clients: this.props.clients,
-			deadline: TOMORROW
+			deadline: TOMORROW,
+			disabledPriorityInput: true,
+			priority: 0
 		})
 	}
 
@@ -98,7 +103,11 @@ class AddTaskModal extends Component {
 
 	renderClientSelectOptions() {
 		let arr = this.state.clients
-		.map(client => <option key={client._id} value={client._id}>{client.name}</option>);
+		.map(
+			client =>(
+				<option key={client._id} value={client._id}>{client.name}</option>
+			)
+		);
 		arr.push(<option key={'null'} value={''}>------</option>);
 		return arr
 	}
@@ -128,27 +137,55 @@ class AddTaskModal extends Component {
 		this.setState({deadline, deadlineFormatted})
 	}
 
+	changePriority = (e) => {
+		const priority = e.target.value;
+		this.setState({priority});
+	}
+
+	changeAvailabilityPriorityInput = () => {
+		let disabledPriorityInput = !this.state.disabledPriorityInput;
+
+		if (disabledPriorityInput) {
+			this.setState({priority: 0})
+		} else {
+			this.setDefaultPriorityValue();
+		}
+
+		this.setState({disabledPriorityInput});
+	}
+
+	setDefaultPriorityValue() {
+		const tasksExecutor = taskDataService.getAllTasksForExecutor(this.state.executor);
+
+		let defaultPriority = Math.max(...tasksExecutor
+			.map(t => t.priority||0)
+		) + 1;
+
+		this.setState({priority: defaultPriority})
+		console.log(this.state.priority);
+	}
+
 	render() {
-		
-		
+
+
 		return (
-			<Modal 
+			<Modal
 				className="add-task-modal"
 				show={this.state.show}
 				onHide={this.props.onHide}
 			>
-				<Modal.Header 
+				<Modal.Header
 					closeButton
-				> 
+				>
 					<Modal.Title> Добавить задачу </Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
 					<Validation.components.Form
-						
+
 					>
 						<FormGroup>
 							<ControlLabel>Клиент</ControlLabel>
-							  <Validation.components.Select 
+							  <Validation.components.Select
 							  	className='form-control'
 									value={this.state.client}
 									name='client'
@@ -160,7 +197,7 @@ class AddTaskModal extends Component {
 						</FormGroup>
 						<FormGroup>
 							<ControlLabel>Исполнитель</ControlLabel>
-							  <Validation.components.Select  
+							  <Validation.components.Select
 							  	name='executor'
 							  	className='form-control'
 							  	value={this.state.executor}
@@ -173,8 +210,8 @@ class AddTaskModal extends Component {
 						<FormGroup>
 							<ControlLabel>Ответственный</ControlLabel>
 							  <Validation.components.Select
-							  	name='responsible'  
-							  	className='form-control' 
+							  	name='responsible'
+							  	className='form-control'
 							  	value={this.state.responsible}
 							  	validations={['required']}
 							  	onChange={this.changeResponsibleSelect}
@@ -184,7 +221,7 @@ class AddTaskModal extends Component {
 						</FormGroup>
 						<FormGroup>
 							<ControlLabel>Выполнить до</ControlLabel>
-							  <DatePicker 
+							  <DatePicker
 							  	value={this.state.deadline}
 							  	onChange={this.changeDate}
 							  	minDate={TOMORROW}
@@ -193,11 +230,26 @@ class AddTaskModal extends Component {
 							  />
 						</FormGroup>
 						<FormGroup>
+							<ControlLabel>Приоритет</ControlLabel>
+								<Checkbox onChange={this.changeAvailabilityPriorityInput}>
+									Установить приоритет
+								</Checkbox>
+							  <Validation.components.Input
+							  	type='number'
+							  	name='priority'
+							  	validations={[]}
+							  	className='form-control'
+							  	value={this.state.priority}
+							  	onChange={this.changePriority}
+							  	disabled={this.state.disabledPriorityInput}
+							  />
+						</FormGroup>
+						<FormGroup>
 				      <ControlLabel>Задача</ControlLabel>
 				      <Validation.components.Textarea
 								name='text'
 								validations={['required']}
-								className="form-control" 
+								className="form-control"
 								placeholder="..."
 								value={this.state.text}
 								onChange={this.changeTextarea}

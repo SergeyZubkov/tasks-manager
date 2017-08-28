@@ -53,14 +53,24 @@ class Column extends Component {
     .remove(id)
   }
 
-  sortByDateNewFirst() {
-    return _.sortBy(this.props.cards, 
-      card => +new Date(card.date)
+  sortByDateNewFirst(list) {
+    return _.sortBy(
+      list, 
+      item => +new Date(item.date)
     ).reverse();
   }
 
+  sortByPriority(list) {
+    return _.sortBy(
+      list,
+      item => item.priority||list.length
+    );
+  }
+
   render() {
-    const cards = this.sortByDateNewFirst()
+    const cards = this.sortByPriority(
+      this.sortByDateNewFirst(this.props.cards)
+    );
 
     return (
       <div className="column">

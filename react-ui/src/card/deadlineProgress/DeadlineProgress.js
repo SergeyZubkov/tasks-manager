@@ -13,8 +13,8 @@ class DeadlineProgress extends Component {
 		const timeLimit = Math.abs(toDate - fromDate);
 		const timeLeft = new Date() - fromDate;
 		const per = Math.round(timeLeft / ( timeLimit / 100 ));
-		return(
-			<ProgressBar now={per} />
+		return (
+			<ProgressBar className={this.props.show ? '': 'hidden'} now={per} /> 
 		)
 	}
 }
