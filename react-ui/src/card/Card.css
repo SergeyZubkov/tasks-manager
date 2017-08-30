@@ -53,7 +53,7 @@
 
 
 .card__responsible {
-	
+
 }
 
 .card__responsible span {
@@ -78,31 +78,37 @@
 	box-shadow: 0 5px 20px -5px #223844;
 	color: #666;
 	font-weight: 400;
-}	
+}
 
 .card__body {
 	padding: 15px 15px 15px;
 }
 
-.card .deadline {
+.card .date-info {
 	padding: 0 15px;
 	border-top: 1px solid #efefef;
 	background: #fcf8e3;
 	font-size: 12px;
 	line-height: 1.6;
 	padding-bottom: 15px;
+	overflow: hidden;
 }
 
-.card .deadline i:last-child {
+.card .date-info__left {
+	float: left;
+}
+
+.card .date-info__right {
 	float: right;
 }
 
-.card .deadline .progress {
+.card .progress {
 	margin-bottom: 0;
 	height: 10px;
+	clear: both;
 }
 
-.card .deadline .progress-bar {
+.card .progress-bar {
 	background: #f5d632;
 }
 

@@ -31,7 +31,7 @@ function getAll(req, res) {
 				return Promise.resolve(tasks)
 			})
 			.then((tasks) => {
-				
+
 				return res.json(tasks);
 			})
 		}
@@ -45,42 +45,50 @@ function getAll(req, res) {
 function add(req, res) {
 	const priorityNewTask = req.body.priority;
 	const tasksQueries = [];
-	let priorityIsUsed;
 
-	Task
-	.find({
-		executor: req.body.executor,
-		priority: {$gt: 0}
-	})
-	.exec((err, priorities) => {
-		priorityIsUsed = priorities.indexOf(priorityNewTask)
-		console.log(priorityIsUsed);
-	})
-	.then(() => {
-		if (priorityNewTask!==0&&priorityIsUsed) {
-			return Task
-			.find({
-				executor: req.body.executor,
-				priority: {$gte: priorityNewTask}
-			})
-			.then(tasks => {
-				tasks.forEach(task => {
-					console.log(task)
-					tasksQueries
-					.push(
-						Task
-						.findOneAndUpdate(
-							{_id: task._id}, 
-							{priority: task.priority + 1}
-						)
-					);
-				});
-				return Promise.all(tasksQueries);
-			})
-			
-		}
-		else return Promise.resolve();
-	})
+	const isPriorityUsed = () => {
+		// ищем все задачи данного исполнителя со значением priority больше нуля
+		return Task
+		.find({
+			executor: req.body.executor,
+			priority: {$gt: 0}
+		},
+		// select оставляет _id, результат получается - [{_id: ..., priority: 1}, {...}]
+		'priority')
+		.then((tasks) => {
+			// проверяем используется ли уже знанчение priority у новой задачи
+			const IsUsed = tasks.some(t => t.priority === priorityNewTask);
+
+			// Если новая задача имеет приоритет и он уже назначен для какой-то задачи, то
+			if (priorityIsUsed) {
+				// находим все задачи данного исполнителя со значением priority больше или
+				// равному значению priotiy новой задачи
+				return Task
+							.find({
+								executor: req.body.executor,
+								priority: {$gte: priorityNewTask}
+							})
+							// затем создаем цепочку промисов увеличивающих priority
+							.then(tasks => {
+								tasks.forEach(task => {
+									console.log(task)
+									tasksQueries
+									.push(
+										Task
+										.findOneAndUpdate(
+											{_id: task._id},
+											{priority: task.priority + 1}
+										)
+									);
+								});
+								return Promise.all(tasksQueries);
+							})
+			}
+			else return Promise.resolve();
+		})
+	}
+
+	(priorityNewTask ?  isPriorityUsed() : Promise.resolve())
 	.then(() => {
 		Task.create(req.body, (err, task) => {
 			if (err) {
@@ -88,7 +96,7 @@ function add(req, res) {
 			}
 			console.log('create Task');
 			console.log(task);
-			
+
 			Notify.wasCreatedTask(task);
 
 			Task
@@ -96,7 +104,7 @@ function add(req, res) {
 			.exec((err, tasks) => res.json(tasks));
 		});
 	})
-
+	.catch((err) => console.log(err))
 }
 
 /**
@@ -113,6 +121,7 @@ function update(req, res) {
 	const orgCol = originalData.column,
 				edtCol = editedData.column;
 
+	// Если поменялась колонка размещения задачи
 	if (orgCol !== edtCol) {
 		if (edtCol === 'Завершенные'||edtCol === 'Замороженные') {
 			editedData.priority = 0;
@@ -155,7 +164,7 @@ function update(req, res) {
 				.gte(editedData.priority)
 				.lt(originalData.priority === 0&&editedData.priority > 0 ? 999 : originalData.priority)
 				.exec((err, tasks) => {
-					console.log('increase priority')					
+					console.log('increase priority')
 					console.log(tasks)
 					tasks.forEach(t => {
 						operationsQueue.push(Task.findOneAndUpdate({_id: t._id}, {priority: t.priority+1}));
@@ -170,6 +179,7 @@ function update(req, res) {
 
 	changePriorityForOtherTaskIfNeed()
 	.then(() => {
+		// {new: true} используется, чтобы получить измененную задачу в cb;
 		Task.findOneAndUpdate(query, editedData, {new: true}, (err, updatedTask) => {
 			if (err) {
 				console.log('Error on save!');
@@ -182,9 +192,9 @@ function update(req, res) {
 			.find()
 			.exec((err, tasks) => {
 				Notify.wasEditedTask(editedData, originalData);
-				
-				return res.json(tasks);	
-			}) 
+
+				return res.json(tasks);
+			})
 		})
 	})
 }
@@ -224,8 +234,8 @@ function addComment(req, res) {
 		task.comments.push(comment);
 
 		task.save(function(err) {
-			Notify.wasCommentedTask(task);			
-			return res.json(task);  
+			Notify.wasCommentedTask(task);
+			return res.json(task);
 		});
 	});
 }

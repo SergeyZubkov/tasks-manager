@@ -26,8 +26,9 @@ class AddTaskModal extends Component {
 			text: '',
 			client: '',
 			clients: this.props.clients,
-			deadline: TOMORROW,
+			deadline: null,
 			disabledPriorityInput: true,
+			disabledDeadlineInput: true,
 			priority: 0
 		}
 	}
@@ -69,7 +70,7 @@ class AddTaskModal extends Component {
 			text: this.state.text,
 			column: 'Задачи',
 			date: new Date(),
-			deadline: new Date(this.state.deadline),
+			deadline: this.state.disabledDeadlineInput ? null : this.state.deadline,
 			priority: this.state.priority
 		};
 
@@ -92,6 +93,7 @@ class AddTaskModal extends Component {
 			clients: this.props.clients,
 			deadline: TOMORROW,
 			disabledPriorityInput: true,
+			disabledDeadlienInput: true,
 			priority: 0
 		})
 	}
@@ -138,8 +140,23 @@ class AddTaskModal extends Component {
 	}
 
 	changePriority = (e) => {
-		const priority = e.target.value;
+		// react-validation input type number - происходит измениния типа данных
+		// после изменения значения с Number на String
+		const priority = +e.target.value;
+		console.log(typeof priority)
 		this.setState({priority});
+	}
+
+	changeAvailabilityDeadlineInput = () => {
+		let disabledDeadlineInput = !this.state.disabledDeadlineInput;
+
+		if (disabledDeadlineInput) {
+			this.setState({deadline: null})
+		} else {
+			this.setState({deadline: TOMORROW});
+		}
+
+		this.setState({disabledDeadlineInput});
 	}
 
 	changeAvailabilityPriorityInput = () => {
@@ -155,7 +172,8 @@ class AddTaskModal extends Component {
 	}
 
 	setDefaultPriorityValue() {
-		const tasksExecutor = taskDataService.getAllTasksForExecutor(this.state.executor);
+		const tasksExecutor = taskDataService
+		.getAllTasksForExecutor(this.state.executor);
 
 		let defaultPriority = Math.max(...tasksExecutor
 			.map(t => t.priority||0)
@@ -166,7 +184,7 @@ class AddTaskModal extends Component {
 	}
 
 	render() {
-
+		console.log(TOMORROW.slice(0, 10))
 
 		return (
 			<Modal
@@ -221,12 +239,16 @@ class AddTaskModal extends Component {
 						</FormGroup>
 						<FormGroup>
 							<ControlLabel>Выполнить до</ControlLabel>
+								<Checkbox onChange={this.changeAvailabilityDeadlineInput}>
+									Установить срок
+								</Checkbox>
 							  <DatePicker
-							  	value={this.state.deadline}
+							  	value={TOMORROW}
 							  	onChange={this.changeDate}
 							  	minDate={TOMORROW}
 							  	dayLabels={['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']}
 							  	monthLabels={['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Ноябрь','Декабрь']}
+									disabled={this.state.disabledDeadlineInput}
 							  />
 						</FormGroup>
 						<FormGroup>

@@ -4,7 +4,7 @@ import _ from 'lodash';
 import UserDataService from '../data/userDataService';
 
 import Dropdown from '../dropdown/Dropdown';
-import FontAwesome from 'react-fontawesome';  
+import FontAwesome from 'react-fontawesome';
 import {Label} from 'react-bootstrap';
 import moment from 'moment';
 import EditTaskModal from './editTaskModal/EditTaskModal';
@@ -17,7 +17,7 @@ import Linkify from 'react-linkify';
 class Card extends Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
       showEditTaskModal: false,
       showSelectColumnTaskModal: false,
@@ -47,7 +47,7 @@ class Card extends Component {
     console.log(userIsResponsible);
 
     if (userIsExecutor) {
-      return ['Выполняются','Завершенные', 'Замороженные']; 
+      return ['Выполняются','Завершенные', 'Замороженные'];
     } else if (userIsResponsible) {
       return ['Замороженные']
     } else {
@@ -160,11 +160,11 @@ class Card extends Component {
               display: disableMenu||!userIsAuthor&&!userIsExecutor&&!userIsResponsible ? 'none' : ''
             }}
           >
-            <Dropdown   
+            <Dropdown
               className='card__header-dropdown'
               title={dropdownTitle}
             >
-              <div 
+              <div
                 style={{
                   display: userIsResponsible|| userIsExecutor
                   ? '' : 'none'
@@ -172,7 +172,7 @@ class Card extends Component {
                 onClick={this.replaceTask}>
                 Переместить
               </div>
-              <div 
+              <div
                 style={{
                   display: userIsAuthor ? '' : 'none'
                 }}
@@ -180,7 +180,7 @@ class Card extends Component {
               >
                 Редактировать
               </div>
-              <div 
+              <div
                 style={{
                   display: userIsAuthor ? '' : 'none'
                 }}
@@ -195,14 +195,22 @@ class Card extends Component {
             {text}
           </Linkify>
         </div>
-        <div className="deadline">
-          <i>выполнить до</i> {moment(deadline).format("DD/MM/YY")}
-          <DeadlineProgress
-            show={column !== 'Завершенные'&&column !== 'Замороженные'}
-            fromDate={new Date(date)} 
-            toDate={new Date(deadline)} 
-          />
+        <div
+          className='date-info'
+          style={{
+            display: deadline||dateClose ? '' : 'none'
+          }}
+        >
+          <span
+            className="date-info__left"
+            style={{
+              display: deadline ? '' : 'none'
+            }}
+          >
+            <i>выполнить до</i> {moment(deadline).format("DD/MM/YY")}
+          </span>
           <i
+            className="date-info__right"
             style={{
               display: column === 'Завершенные'||column === 'Замороженные' ?
                 '': 'none'
@@ -211,11 +219,18 @@ class Card extends Component {
             {column === 'Завершенные' ? "завершена " : "заморожена "}
             {moment(dateClose).format("DD/MM/YY")}
           </i>
+          <DeadlineProgress
+            show={
+              deadline&&column !== 'Завершенные'&&column !== 'Замороженные'
+            }
+            fromDate={new Date(date)}
+            toDate={new Date(deadline)}
+          />
         </div>
         <div className="card__footer">
           {moment(date).format("DD/MM/YY HH:mm")}
           {clientView}
-          <div 
+          <div
             className="card__comments"
             onClick={this.openComments}
             style={{
