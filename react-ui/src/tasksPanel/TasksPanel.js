@@ -39,7 +39,7 @@ class TasksPannel extends Component {
   componentDidMount() {
     clientDataService.on('change', this.getClients);
     taskDataService.on('change', this.fetch);
-    
+
     this.fetch();
     this.getClients();
 
@@ -49,7 +49,7 @@ class TasksPannel extends Component {
 
   componentWillUnmount() {
     taskDataService.removeListener('change', this.fetch);
-    taskDataService.removeListener('change', this.getClients);
+    clientDataService.removeListener('change', this.getClients);
   }
 
   getClients = () => {
@@ -105,7 +105,7 @@ class TasksPannel extends Component {
       completeCards: columnCompleteCards,
       freezingCards: columnFreezingCards
     });
-    
+
   }
 
   addTask = () => {
@@ -141,24 +141,24 @@ class TasksPannel extends Component {
         <div className="tasks-panel-header">
           <Grid>
             <Row>
-              <Button 
+              <Button
                 bsStyle='primary'
                 onClick={this.addTask}
-              > 
+              >
                 <FontAwesome name='plus-square-o' />
                 <div className="hidden-xs">&nbsp;Добавить задачу</div>
               </Button>
-              <Button 
+              <Button
                 bsStyle='primary'
                 onClick={this.showClients}
-              > 
+              >
                 <FontAwesome name='address-card-o' />
                 <div className="hidden-xs">&nbsp;Клиенты</div>
               </Button>
-              <Button 
+              <Button
                 bsStyle='primary'
                 onClick={this.logOut}
-              > 
+              >
                 <FontAwesome name='sign-out' />
                 <div className="hidden-xs">&nbsp;Выйти</div>
               </Button>
@@ -167,8 +167,13 @@ class TasksPannel extends Component {
         </div>
         <div className='tasks-panel-content'>
           {this.state.columnsTitles.map(columnTitle => {
-            const cards = matching[columnTitle];         
-            return <Column key={columnTitle} title={columnTitle} cards={cards} />
+            const cards = matching[columnTitle];
+            return <Column
+              key={columnTitle}
+              title={columnTitle}
+              cards={cards}
+              filter={columnTitle === 'Завершенные'}
+            />
           })}
         </div>
         <AddTaskModal

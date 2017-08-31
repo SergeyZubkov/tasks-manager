@@ -21,20 +21,22 @@
 }
 .tasks-panel-content {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-around;
   align-items: flex-start;
-  flex-wrap: wrap;
+
   /* минус высота header и внутренние отступы*/
   min-height: calc(100vh - 54px);
   background: #0079BF;
-  padding: 60px 0;
   text-align: left;
   margin: 0 auto;
+
+  padding: 60px 0px;
 }
 
-@media (max-width: 880px) {
+@media (max-width: 1266px) {
   .tasks-panel-content {
-    display: block;
+    display:block;
+    margin: 0 auto;
   }
 }
 

@@ -3,19 +3,28 @@
 	width: 20%;
 	padding: 0 5px 5px;
 	border-radius: 5px;
-	min-width: 205px;
-	margin: 0 auto 20px;
+	min-width: 280px;
+	margin: 0 0 20px;
 }
 
 @media (max-width: 880px) {
 	.column {
 		width: 80%;
+		margin: 0 auto 20px;
+	}
+}
+
+@media (max-width: 1266px) {
+	.column {
+		width: 35%;
+		margin: 0 auto 20px;
 	}
 }
 
 .column__header {
 	display: flex;
 	padding: 0 10px;
+	align-items: center;
 }
 
 .column__header h3 {
@@ -25,8 +34,19 @@
 	font-weight: bold;
 	text-align: left;
 	flex-grow: 1;
+	font-size: 18px;
 }
 
+.column .btn-filter {
+	height: 60%;
+	margin-right:20px;
+	background: #efefef;
+}
+
+.column .btn-filter.btn-filter_filtered {
+	background: #0079BF;
+	color: #fff;
+}
 .column__panel .collapse,
 .column__panel .collapsing {
 	overflow: hidden;

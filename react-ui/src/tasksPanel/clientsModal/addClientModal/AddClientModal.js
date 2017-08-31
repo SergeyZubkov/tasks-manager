@@ -10,7 +10,7 @@ class AddClientModal extends Component {
 
 	constructor(props) {
 		super(props);
-		
+
 		this.state = {
 			show: this.props.show,
 			name: "",
@@ -65,21 +65,21 @@ class AddClientModal extends Component {
 
 	render() {
 		return (
-			<Modal 
+			<Modal
 				className="add-task-modal"
 				show={this.state.show}
 				onHide={this.props.onHide}
 			>
-				<Modal.Header 
+				<Modal.Header
 					closeButton
-				> 
+				>
 					<Modal.Title> Добавить клиента </Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
 					<Validation.components.Form>
 						<FormGroup>
 							<ControlLabel>Название огранизации</ControlLabel>
-								<Validation.components.Input 
+								<Validation.components.Input
 									name='name'
 									className='form-control'
 									type='text'
@@ -98,13 +98,13 @@ class AddClientModal extends Component {
 						</FormGroup>
 						<FormGroup>
 							<ControlLabel>Дополнительная информация</ControlLabel>
-							<Validation.components.Textarea 
+							<Validation.components.Textarea
 								name='additionalInfo'
-								className="form-control" 
+								className="form-control"
 								placeholder="..."
 								onChange={this.changeTextarea}
 								value={this.state.additionalInfo}
-								validations={['required']}
+								validations={[]}
 							/>
 						</FormGroup>
 						<Validation.components.Button
