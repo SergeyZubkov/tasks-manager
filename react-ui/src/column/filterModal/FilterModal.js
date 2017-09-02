@@ -216,7 +216,7 @@ class FilterModal extends Component {
 							bsStyle='default'
 							onClick={this.submit}
 						>
-							Пременить
+							Применить
 						</Button>
 						<Button
 							className='pull-right'

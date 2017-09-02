@@ -20,9 +20,6 @@ class DataService extends EventEmitter {
 		.then(response => {
 			return response;
 		})
-		.catch(error => {
-			console.log(error);
-		});
 	}
 
 	checkAuth(token) {
@@ -87,9 +84,9 @@ class DataService extends EventEmitter {
 			let updatedUser = _.extend({_id: id}, newData);
 
 			_.extend(
-				_.find(this._users, { _id: updatedUser._id }), 
+				_.find(this._users, { _id: updatedUser._id }),
 				updatedUser);
-		
+
 			this.emit('change');
 		})
 		.catch(error => {
@@ -98,7 +95,7 @@ class DataService extends EventEmitter {
 	}
 
 	getUserRolesForTask(task) {
-		return _.map(_.pick(task, ['author', 'executor', 'responsible']), 
+		return _.map(_.pick(task, ['author', 'executor', 'responsible']),
 			v => v === this._currentUser.name
 		);
 	}

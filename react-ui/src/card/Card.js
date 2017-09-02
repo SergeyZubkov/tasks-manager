@@ -28,7 +28,10 @@ class Card extends Component {
   }
 
   deleteTask = () => {
-    this.props.onDeleteTask(this.props._id);
+    let conf = window.confirm('Вы уверены, что хотите удалить задачу?');
+    if(conf) {
+      this.props.onDeleteTask(this.props._id);
+    }
   }
 
   closeEditTaskModal = () => {

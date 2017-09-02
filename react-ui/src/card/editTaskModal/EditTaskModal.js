@@ -14,7 +14,7 @@ class EditTaskModal extends Component {
 
 	constructor(props) {
 		super(props);
-		
+
 		this.state = {
 			show: this.props.show,
 			disabledPriorityInput: this.props.priority ? false : true,
@@ -36,7 +36,7 @@ class EditTaskModal extends Component {
 	componentWillReceiveProps(nextProps) {
 		this.setState(
 			{
-				show: nextProps.show, 
+				show: nextProps.show,
 				disabledPriorityInput: nextProps.priority ? false : true,
 				...nextProps
 			}
@@ -45,7 +45,7 @@ class EditTaskModal extends Component {
 
 	componentDidMount() {
 		userDataService
-		.getUsers()	
+		.getUsers()
 		.then((users) => {
 			this.setState({
 				users: users
@@ -57,7 +57,7 @@ class EditTaskModal extends Component {
 	}
 
 	getClients = () => {
-		clientDataService 
+		clientDataService
 		.getAll()
 		.then((clients) => {
 			this.setState({
@@ -165,7 +165,7 @@ class EditTaskModal extends Component {
 		} else {
 			if (this.props.priority) {
 				this.setState({priority: this.props.priority})
-			} else {				
+			} else {
 				this.setDefaultPriorityValue();
 			}
 		}
@@ -186,22 +186,22 @@ class EditTaskModal extends Component {
 
 	render() {
 		return (
-			<Modal 
+			<Modal
 				className="add-task-modal"
 				show={this.state.show}
 				onHide={this.props.onHide}
 				onExited={this.resetForm}
 			>
-				<Modal.Header 
+				<Modal.Header
 					closeButton
-				> 
+				>
 					<Modal.Title> Изменить задачу </Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
 					<Validation.components.Form>
 						<FormGroup>
 							<ControlLabel>Клиент</ControlLabel>
-									<Validation.components.Select 
+									<Validation.components.Select
 								  	className='form-control'
 										value={this.state.client}
 										name='client'
@@ -213,7 +213,7 @@ class EditTaskModal extends Component {
 						</FormGroup>
 						<FormGroup>
 							<ControlLabel>Исполнитель</ControlLabel>
-							  <Validation.components.Select  
+							  <Validation.components.Select
 							  	name='executor'
 							  	className='form-control'
 							  	value={this.state.executor}
@@ -226,8 +226,8 @@ class EditTaskModal extends Component {
 						<FormGroup>
 							<ControlLabel>Ответственный</ControlLabel>
 							  <Validation.components.Select
-							  	name='responsible'  
-							  	className='form-control' 
+							  	name='responsible'
+							  	className='form-control'
 							  	value={this.state.responsible}
 							  	validations={['required']}
 							  	onChange={this.changeResponsibleSelect}
@@ -237,9 +237,9 @@ class EditTaskModal extends Component {
 						</FormGroup>
 						<FormGroup>
 							<ControlLabel>Выполнить до</ControlLabel>
-								<DatePicker 
+								<DatePicker
 									value={this.state.deadline}
-									minDate={TOMORROW}
+									minDate={this.state.deadline ? TOMORROW : null}
 									onChange={this.changeDate}
 									dayLabels={['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']}
 									monthLabels={['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Ноябрь','Декабрь']}
@@ -252,7 +252,7 @@ class EditTaskModal extends Component {
               }}
 						>
 							<ControlLabel>Приоритет</ControlLabel>
-								{this.props.priority ? 
+								{this.props.priority ?
 									<Checkbox
 										onChange={this.changeAvailabilityPriorityInput}
 									>
@@ -266,9 +266,9 @@ class EditTaskModal extends Component {
 								}
 							  <Validation.components.Input
 							  	type='number'
-							  	name='priority' 
-							  	validations={[]} 
-							  	className='form-control' 
+							  	name='priority'
+							  	validations={[]}
+							  	className='form-control'
 							  	value={this.state.priority}
 							  	onChange={this.changePriority}
 							  	disabled={this.state.disabledPriorityInput}
@@ -276,7 +276,7 @@ class EditTaskModal extends Component {
 						</FormGroup>
 						<FormGroup>
 							<ControlLabel>Задача</ControlLabel>
-				      <Validation.components.Textarea  
+				      <Validation.components.Textarea
 				      	name='text'
 				      	validations={['required']}
 				      	className='form-control'

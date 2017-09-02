@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './Login.css';
-import {Grid, Row, Col, Panel, Button, FormGroup, ControlLabel} from 'react-bootstrap';
+import {Grid, Row, Col, Panel, Button, FormGroup, ControlLabel, Alert} from 'react-bootstrap';
 import userDataService from '../data/userDataService';
 import {Redirect} from 'react-router-dom';
 import AuthService from '../AuthService';
@@ -9,7 +9,7 @@ import Validation from 'react-validation';
 class Login extends Component {
 	constructor(props) {
 		super(props);
-		
+
 		this.state = {
 			email: '',
 			password: '',
@@ -37,6 +37,13 @@ class Login extends Component {
 			const token = response.data.token;
 			AuthService.authenticateUser(token);
 			this.setState({redirect: true});
+		})
+		.catch((err) => {
+			if (err.response.status === 401) {
+				this.setState({
+					error: 'Неверный email или пароль'
+				})			
+			}
 		});
 	}
 
@@ -79,7 +86,13 @@ class Login extends Component {
 											validations={['required']}
 										/>
 									</FormGroup>
-									<Button 
+									{this.state.error&&
+										<Alert
+											bsStyle="danger"
+										>
+										 	{this.state.error}
+										 </Alert>}
+									<Button
 										bsStyle="primary"
 										onClick={this.submit}
 									>
@@ -96,4 +109,3 @@ class Login extends Component {
 }
 
 export default Login;
-

@@ -56,11 +56,14 @@ function add(req, res) {
 		// select оставляет _id, результат получается - [{_id: ..., priority: 1}, {...}]
 		'priority')
 		.then((tasks) => {
+			let isUsed;
 			// проверяем используется ли уже знанчение priority у новой задачи
-			const IsUsed = tasks.some(t => t.priority === priorityNewTask);
+			if (tasks) {
+				isUsed = tasks.some(t => t.priority === priorityNewTask);
+			}
 
 			// Если новая задача имеет приоритет и он уже назначен для какой-то задачи, то
-			if (priorityIsUsed) {
+			if (isUsed) {
 				// находим все задачи данного исполнителя со значением priority больше или
 				// равному значению priotiy новой задачи
 				return Task

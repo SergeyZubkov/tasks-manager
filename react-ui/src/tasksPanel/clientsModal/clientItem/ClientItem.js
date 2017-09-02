@@ -10,7 +10,7 @@ class ClientItem extends Component {
 
 	constructor(props) {
 		super(props);
-		
+
 		this.state = {
 			showClienInfoModal: false,
 			showEditClientModal: false
@@ -45,7 +45,10 @@ class ClientItem extends Component {
 	}
 
 	remove = (e) => {
-		clientDataService.remove(this.props._id);
+		let conf = window.confirm('Вы уверенны, что хотите удалить клиента?');
+		if (conf) {
+			clientDataService.remove(this.props._id);
+		}
 		e.stopPropagation();
 	}
 
@@ -81,13 +84,13 @@ class ClientItem extends Component {
 				</Button>
 				<ClientInfoModal
 				 	show={this.state.showClienInfoModal}
-	        onHide={this.closeClientInfoModal} 
-					{...this.props} 
+	        onHide={this.closeClientInfoModal}
+					{...this.props}
 				/>
 				<EditClientModal
 				 	show={this.state.showEditClientModal}
-	        onHide={this.closeEditClientModal} 
-					{...this.props} 
+	        onHide={this.closeEditClientModal}
+					{...this.props}
 				/>
 			</li>
 		)

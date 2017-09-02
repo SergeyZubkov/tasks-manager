@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
 import './ClientInfoModal.css';
 import {Modal} from 'react-bootstrap';
+import Linkify from 'react-linkify';
 
 
 class ClientInfoModal extends Component {
 
 	constructor(props) {
 		super(props);
-		
+
 		this.state = {
 			show: this.props.show
 		}
-		
+
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -31,20 +32,20 @@ class ClientInfoModal extends Component {
 		} = this.props;
 
 		return (
-			<Modal 
+			<Modal
 				className="clients-modal"
 				show={this.state.show}
 				onHide={this.props.onHide}
 			>
-				<Modal.Header 
+				<Modal.Header
 					closeButton
-				> 
+				>
 					<Modal.Title> {name} </Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
 					<h4> Телефон </h4>
-					<div> 
-						<a 
+					<div>
+						<a
 							href={`tel:${phone}`}
 						>
 							{phone}
@@ -52,7 +53,9 @@ class ClientInfoModal extends Component {
 					</div>
 					<h4> Дополнительная информация </h4>
 					<p>
-						{additionalInfo}
+						<Linkify>
+							{additionalInfo}
+						</Linkify>
 					</p>
 				</Modal.Body>
 			</Modal>

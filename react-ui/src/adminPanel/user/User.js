@@ -6,7 +6,7 @@ import EditUserModal from './editUserModal/EditUserModal';
 class User extends Component {
 	constructor(props) {
 		super(props);
-		
+
 		this.state = {
 			showEditUserModal: false,
 			name: this.props.name,
@@ -18,7 +18,10 @@ class User extends Component {
 	}
 
 	delete = () => {
-		this.props.onDelete(this.state.id);
+		let conf = window.confirm('Вы уверены, что хотите удалить пользователя?');
+		if (conf) {
+			this.props.onDelete(this.state.id);
+		}
 	}
 
 	editOn = () => {
@@ -60,13 +63,13 @@ class User extends Component {
 						</div>
 					</Col>
 					<Col md={3} xs={6} className='text-right'>
-						<Button 
+						<Button
 							bsStyle='default'
 							onClick={this.editOn}
 						>
 							Редактировать
 						</Button>
-						<Button 
+						<Button
 							bsStyle='danger'
 							onClick={this.delete}
 						>
