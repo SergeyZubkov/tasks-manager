@@ -9,12 +9,14 @@ const clientCtrl = require('./db/controllers').client;
 const passport = require('passport');
 const bodyParser = require('body-parser');
 const initPassport = require('./initPassport');
+const compression = require('compression');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 connect();
 // tell the app to parse HTTP body messages
+app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
