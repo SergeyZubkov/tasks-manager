@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import './FilterModal.css';
 import {Button, Modal, FormGroup, ControlLabel, FormControl, Checkbox} from 'react-bootstrap';
 import userDataService from '../../data/userDataService';
-import clientDataService from '../../data/clientDataService';
 import DatePicker from 'react-bootstrap-date-picker';
 import moment from 'moment';
 import _ from 'lodash';
@@ -25,7 +24,6 @@ class FilterModal extends Component {
       fromDate: undefined
 		};
 
-    this.getClients = this.getClients.bind(this);
     this.getUsers = this.getUsers.bind(this);
 	}
 
@@ -36,26 +34,11 @@ class FilterModal extends Component {
 	}
 
 	componentDidMount() {
-    clientDataService.on('change', this.getClients);
     userDataService.on('change', this.getUsers);
-
-    this.getClients();
 		this.getUsers();
 	}
 
   componentWillUnmount() {
-    clientDataService.removeListener('change', this.getUsers);
-    userDataService.removeListener('change', this.getClients);
-  }
-
-  getClients() {
-    clientDataService
-    .getAll()
-    .then((clients) => {
-      this.setState({
-        clients: clients
-      })
-    });
   }
 
   getUsers() {

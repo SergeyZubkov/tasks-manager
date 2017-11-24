@@ -4,7 +4,6 @@ import {Button, Grid, Row} from 'react-bootstrap';
 import Column from '../column/Column';
 import taskDataService from '../data/taskDataService';
 import userDataService from '../data/userDataService';
-import clientDataService from '../data/clientDataService';
 import AddTaskModal from './addTaskModal/AddTaskModal';
 import FontAwesome from 'react-fontawesome';
 import AuthService from '../AuthService';
@@ -37,11 +36,9 @@ class TasksPannel extends Component {
   }
 
   componentDidMount() {
-    clientDataService.on('change', this.getClients);
     taskDataService.on('change', this.fetch);
 
     this.fetch();
-    this.getClients();
 
     this.setState({currentUser: userDataService.getCurrentUser()});
 
@@ -49,19 +46,6 @@ class TasksPannel extends Component {
 
   componentWillUnmount() {
     taskDataService.removeListener('change', this.fetch);
-    clientDataService.removeListener('change', this.getClients);
-  }
-
-  getClients = () => {
-    clientDataService
-    .getAll()
-    .then((clients) => {
-      this.setState({
-        clients
-      });
-    });
-
-    this.fetch();
   }
 
   fetch = ()  => {
@@ -184,7 +168,6 @@ class TasksPannel extends Component {
         <ClientsModal
           show={this.state.showClientsModal}
           onHide={this.closeClientsModal}
-          clients={this.state.clients}
         />
       </div>
     );

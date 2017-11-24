@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import './ClientItem.css';
+// import './FacilityItem.css';
 
-const ClientItem = ({title, onClick, ...props}) => {
+const FacilityItem = ({title, onClick, ...props}) => {
 
 	return (
 		<li
@@ -14,4 +14,4 @@ const ClientItem = ({title, onClick, ...props}) => {
 	)
 }
 
-export default ClientItem;
+export default FacilityItem;

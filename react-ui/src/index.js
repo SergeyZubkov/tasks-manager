@@ -9,6 +9,29 @@ import registerServiceWorker from './registerServiceWorker';
 import {Route, BrowserRouter, Switch, Redirect} from 'react-router-dom';
 import AuthService from './AuthService';
 
+import {
+  createStore, 
+  combineReducers,
+  applyMiddleware,
+  compose
+} from 'redux';
+import clientsReducer from './data/clients/reducer';
+import {Provider} from 'react-redux';
+import thunk from 'redux-thunk';
+import {reducer as formReducer} from 'redux-form';
+
+const rootReducer = combineReducers({
+  entities: clientsReducer,
+  form: formReducer
+})
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(rootReducer, /* preloadedState, */ composeEnhancers(
+  applyMiddleware(
+    thunk
+  )
+));
+
 class PrivateRoute extends React.Component {
   constructor(props) {
     super(props);
@@ -65,13 +88,15 @@ class PrivateRoute extends React.Component {
 
 const Root = () => {
 	return (
-		<BrowserRouter>
-			<Switch>
-				<PrivateRoute exact path='/' component={TasksPanel} />
-        <Route path='/admin' component={AdminPanel} />
-				<Route path='/login' component={Login} />
-			</Switch>
-		</BrowserRouter>
+		<Provider store={store}>
+      <BrowserRouter>
+        <Switch>
+          <PrivateRoute exact path='/' component={TasksPanel} />
+          <Route path='/admin' component={AdminPanel} />
+          <Route path='/login' component={Login} />
+        </Switch>
+      </BrowserRouter>  
+    </Provider>
 	)
 }
 

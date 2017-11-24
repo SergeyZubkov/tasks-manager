@@ -3,7 +3,6 @@ import './AddTaskModal.css';
 import {Modal, FormGroup, ControlLabel, Checkbox} from 'react-bootstrap';
 import userDataService from '../../data/userDataService';
 import taskDataService from '../../data/taskDataService';
-import clientDataService from '../../data/clientDataService';
 import DatePicker  from 'react-bootstrap-date-picker';
 import Validation from 'react-validation';
 import moment from 'moment';

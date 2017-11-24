@@ -186,6 +186,7 @@ function update(req, res) {
 		Task.findOneAndUpdate(query, editedData, {new: true}, (err, updatedTask) => {
 			if (err) {
 				console.log('Error on save!');
+				console.log(err);
 				return res.status(500).send('We failed to save for some reason');
 			}
 

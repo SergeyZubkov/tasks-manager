@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import './ClientInfoModal.css';
+
 import {Modal} from 'react-bootstrap';
 import Linkify from 'react-linkify';
+import {connect} from 'react-redux';
 
 
 class ClientInfoModal extends Component {
@@ -29,7 +31,7 @@ class ClientInfoModal extends Component {
 			name,
 			phone,
 			additionalInfo
-		} = this.props;
+		} = this.props.clientInfo;
 
 		return (
 			<Modal
@@ -63,4 +65,6 @@ class ClientInfoModal extends Component {
 	}
 }
 
-export default ClientInfoModal;
+export default connect(state => ({
+	clientInfo: state.clientInfo
+}))(ClientInfoModal);

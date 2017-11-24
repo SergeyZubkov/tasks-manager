@@ -1,10 +1,23 @@
 import React, { Component } from 'react';
-import './ClientsModal.css';
 import {Modal, ListGroup, Button, } from 'react-bootstrap';
+import {connect} from 'react-redux';
+
+import './ClientsModal.css';
 import ClientItem from './clientItem/ClientItem';
+import ClientInfo from '../clientInfoModal/ClientInfoModal';
+import {ClientEditForm, ClientAddForm} from './clientForm/ClientForm';
 import FontAwesome from 'react-fontawesome';
 import AddClientModal from './addClientModal/AddClientModal';
-
+import {
+	showClientInfo,
+	fetchClients,
+	setEditingClient,
+	unsetEditingClient,
+	updateClient,
+	deleteClient,
+	addClient
+} from '../../data/clients/actions';
+import {getClients} from '../../data/clients/reducer';
 
 class ClientsModal extends Component {
 
@@ -12,49 +25,101 @@ class ClientsModal extends Component {
 		super(props);
 		
 		this.state = {
-			clients: this.props.clients,
-			show: this.props.show,
-			showAddClientModal: false,
+			showClientAddForm: false
 		}
 		
-		console.log('clients mounted ');
 	}
 
-	componentWillReceiveProps(nextProps) {
-		this.setState({show: nextProps.show});
+	componentDidMount() {
+		this.props.getClients()
 	}
 
-	addClient= () => {
-    this.setState({showAddClientModal: true});
+	showClientForm = () => {
+    this.setState({showClientAddForm: true});
   }
 
-	closeAddClientModal = () => {
-    this.setState({showAddClientModal: false});
+	closeClientAddForm = () => {
+    this.setState({showClientAddForm: false});
+  }
+
+  showClientInfo = (client) => (e) => {
+  	this.setState({showClientInfo: true})
+  	this.props.showClientInfo(client)
+  }
+
+  deleteClient = (client) => (e) => {
+  	e.stopPropagation();
+  	this.props.deleteClient(client._id)
+  }
+
+  closeClientInfo = () => {
+  	this.setState({showClientInfo: false})
+  }
+
+  showClientEditForm = (client) => (e) => {
+  	e.stopPropagation();
+  	this.setState({showClientEditForm: true})
+  	this.props.setEditingClient(client)
+  }
+
+  closeClientEditForm = () => {
+  	this.props.unsetEditingClient();
+  	this.setState({showClientEditForm: false})
   }
 
 	close = () => {
 		this.props.onHide();
 	}
 
+	addClient = (client) => {
+		this.closeClientAddForm();
+		this.props.addClient(client)
+	}
+
+	updateClient = (updatedClient) => {
+		this.closeClientEditForm();
+		this.props.updateClient(updatedClient);
+	}
+
+	renderClientItem = (client) => {
+		console.log('renderItem')
+		return (
+			<ClientItem key={client._id} title={client.name} onClick={this.showClientInfo(client)}>
+				<Button 
+					bsStyle='default'
+					onClick={this.showClientEditForm(client)}
+				>
+					<FontAwesome
+						name='edit'
+					/>
+				</Button>
+				<Button 
+					bsStyle='danger'
+					onClick={this.deleteClient(client)}
+				>
+					<FontAwesome
+						name='trash'
+					/>
+				</Button>
+			</ClientItem>
+		)
+	}
+
 	render() {
-
-		const {
-			clients
-		} = this.props;
-
+		const {clients} = this.props
 		return (
 			<Modal 
 				className="clients-modal"
-				show={this.state.show}
+				show={this.props.show}
 				onHide={this.props.onHide}
 			>
 				<Modal.Header 
 					closeButton
 				> 
-					<Modal.Title> Клиенты ({clients.length}) 
+					<Modal.Title> Клиенты ({clients&&clients.length||0}) 
 						  <Button 
                 bsStyle='success'
-                onClick={this.addClient}
+                onClick={this.showClientForm}
               > 
 	              <FontAwesome name='plus-square-o' />
 	              <div className="hidden-xs">&nbsp;Добавить клиента</div>
@@ -62,15 +127,35 @@ class ClientsModal extends Component {
 					</Modal.Title>
 				</Modal.Header>
 				<ListGroup>
-					{clients.map(client => <ClientItem key={client._id} {...client} />)}
+					{clients.map(this.renderClientItem)}
 				</ListGroup>
-				<AddClientModal
-          show={this.state.showAddClientModal}
-          onHide={this.closeAddClientModal}
+
+				<ClientAddForm
+          show={this.state.showClientAddForm}
+          onHide={this.closeClientAddForm}
+          onSubmit={this.addClient}
         />
+        <ClientEditForm
+        	show={this.state.showClientEditForm}
+        	onHide={this.closeClientEditForm}
+        	onSubmit={this.updateClient}
+        />
+				<ClientInfo
+					show={this.state.showClientInfo}
+					onHide={this.closeClientInfo}
+				/>
 			</Modal>
 		);
 	}
 }
 
-export default ClientsModal;
+export default connect(state => ({clients: getClients(state)}), 
+	{
+		getClients: fetchClients,
+		showClientInfo,
+		setEditingClient,
+		unsetEditingClient,
+		updateClient,
+		deleteClient,
+		addClient
+	})(ClientsModal);

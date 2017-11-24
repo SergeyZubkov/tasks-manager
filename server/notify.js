@@ -1,7 +1,7 @@
 var nodemailer = require('nodemailer');
 var User = require('./db/models/user');
 
-const APP_URL = "https://rocky-plateau-11954.herokuapp.com";
+const APP_URL = "https://taskmanageruseduk.herokuapp.com/admin";
 const APP_LINK = `<a href="${APP_URL}">Перейти в приложение</a>`;
 
 var transporter = nodemailer.createTransport({

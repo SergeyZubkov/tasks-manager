@@ -1,5 +1,6 @@
 const Client = require('../models/client');
-
+const Facility = require('../models/facility');
+const mongoose = require('mongoose');
 /**
  * List
  */
@@ -21,13 +22,23 @@ function getAll(req, res) {
  */
 function add(req, res) {
   console.log(req.body)
-  Client.create(req.body, (err, client) => {
-    if (err) {
-      return res.status(400).send(err);
-    }
-    console.log(client);
+  const {facilities} = req.body;
+  
+  req.body.facilities = req.body.facilities.map(fac => fac._id = mongoose.Types.ObjectId());
+  Client.create(req.body)
+  .then(client => {
+    facilities.forEach(fac => fac.client = client._id);
+    
+    console.log(facilities[0])
+    const promises = facilities.map(fac => Facility.create(fac));
 
-    return res.status(200).send('OK');
+    return Promise.all(promises).then(() => client._id)
+  })
+  .then((clientId) => Client.find({_id: clientId}))
+  .then(client => res.json(client))
+  .catch(err => {
+    console.log(err);
+    return res.status(400).send(err);
   });
 }
 

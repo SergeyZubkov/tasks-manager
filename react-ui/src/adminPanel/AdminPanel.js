@@ -66,7 +66,7 @@ class AdminPanel extends Component {
 		return (
 			<Grid className="admin-panel">
 				<Row>
-					<div className="admin-panel__app-link"><a href="/"> Task Mangaer </a></div>
+					<div className="admin-panel__app-link"><a href="/"> Task Manager </a></div>
 					<h2>Панель администратора</h2>
 					<hr></hr>
 					<h3>Пользователи: 

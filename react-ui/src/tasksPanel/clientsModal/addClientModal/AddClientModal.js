@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './AddClientModal.css';
 import {Modal, FormGroup, ControlLabel} from 'react-bootstrap';
-import clientDataService from '../../../data/clientDataService';
 import ReactTelInput from 'react-telephone-input';
 import flagsCountriesSrc from '../../../flags.png';
 import Validation from 'react-validation';
@@ -12,15 +11,10 @@ class AddClientModal extends Component {
 		super(props);
 
 		this.state = {
-			show: this.props.show,
 			name: "",
 			phone: '',
 			additionalInfo: ''
 		}
-	}
-
-	componentWillReceiveProps(nextProps) {
-		this.setState({show: nextProps.show});
 	}
 
 	close = () => {
@@ -29,12 +23,6 @@ class AddClientModal extends Component {
 
 	submit = (e) => {
 		e.preventDefault();
-		clientDataService
-		.add({
-			name: this.state.name,
-			phone: this.state.phone,
-			additionalInfo: this.state.additionalInfo
-		});
 
 		this.clearForm();
 
@@ -67,7 +55,7 @@ class AddClientModal extends Component {
 		return (
 			<Modal
 				className="add-task-modal"
-				show={this.state.show}
+				show={this.props.show}
 				onHide={this.props.onHide}
 			>
 				<Modal.Header

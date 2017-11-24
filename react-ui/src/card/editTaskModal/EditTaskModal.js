@@ -3,7 +3,6 @@ import './EditTaskModal.css';
 import {Button, Modal, FormGroup, ControlLabel, FormControl, Checkbox} from 'react-bootstrap';
 import userDataService from '../../data/userDataService';
 import taskDataService from '../../data/taskDataService';
-import clientDataService from '../../data/clientDataService';
 import DatePicker from 'react-bootstrap-date-picker';
 import Validation from 'react-validation';
 import moment from 'moment';
@@ -50,19 +49,6 @@ class EditTaskModal extends Component {
 			this.setState({
 				users: users
 			});
-		});
-		this.getClients();
-
-		clientDataService.on('change', this.getClients);
-	}
-
-	getClients = () => {
-		clientDataService
-		.getAll()
-		.then((clients) => {
-			this.setState({
-				clients: clients
-			})
 		});
 	}
 

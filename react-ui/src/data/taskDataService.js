@@ -64,6 +64,9 @@ class TaskDataService extends EventEmitter {
 		editedData = Object.assign({}, originalData, editedData);
 
 		delete editedData.date
+		if (!editedData.client) {
+			delete editedData.client;
+		}
 
 		return axios.put('/api/tasks/'+ id, {editedData, originalData})
 		.then(response => {
