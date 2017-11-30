@@ -17,7 +17,7 @@ const byId = (state={}, action) => {
 		case 'UPDATE_CLIENT':
 			// action.response = {entities: {clients: {0: {..}, ..}, facilities: {0: {...}, ...}}, result: [id, ..]}
 			const {clients} = action.response.entities;
-			const updatedClientId = action.response.result[0];
+			const updatedClientId = action.response.result;
 			const updatedClient = clients[updatedClientId];
 			return {
 				...state,

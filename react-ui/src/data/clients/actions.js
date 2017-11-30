@@ -29,8 +29,6 @@ export const fetchClients = () => {
 }
 
 export const addClient = (client) => {
-	if (!client.facilities) client.facilities = []
-
 	return (dispatch) => {
 		console.log(client);
 		return axios.post('/api/clients',  client) 

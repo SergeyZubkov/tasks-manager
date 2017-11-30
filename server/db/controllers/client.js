@@ -3,6 +3,8 @@ const omit = require('lodash/omit');
 const Client = require('../models/client');
 const Facility = require('../models/facility');
 const mongoose = require('mongoose');
+
+const Helpers = require('./helpers')
 /**
  * List
  */
@@ -23,25 +25,17 @@ function getAll(req, res) {
  * Add a client
  */
 function add(req, res) {
-	let returnClient;
 
-	const {facilities} = req.body;
-	req.body.facilities = req.body.facilities.map(fac => fac._id = mongoose.Types.ObjectId());
+	const {client, facilities} = Helpers.prepareReceivedDataForClient(req);
 
-	Client.create(req.body)
-	.then(client => {
-		returnClient = client;
+	Client.create(client)
+	.then(client => Helpers.ifNeedUpdateOrCreateFacilities(facilities, client))
+	.then(result => {
+		const {client, newFacilities} = result;
 		
-		facilities.forEach(fac => fac.client = client._id);
-		
-		const promises = facilities.map(fac => {
-			return Facility.create(fac);
-		});
-
-
-		return Promise.all(promises)
+		return Helpers.ifNeedAddFacilityToClient(newFacilities||facilites, client)
 	})
-	.then(() => Client.findOne({_id: returnClient._id}))
+	.then(client => Client.findOne({_id: client._id}))
 	.then(client => {
 		return res.json(client);
 	})
@@ -56,34 +50,26 @@ function add(req, res) {
  */
 function update(req, res) {
 	const query = { _id: req.params.id };
-	const client = req.body;
-	const {facilities} = client;
-	console.log(facilities)
-	req.body.facilities = req.body.facilities.map(
-		fac => fac._id ? fac._id : fac._id = mongoose.Types.ObjectId()
-	);
+	const {client, facilities} = Helpers.prepareReceivedDataForClient(req);
+
 		// return query
-	Client.findOneAndUpdate(query, client)
-	.then(q => Client.findOne(query))
-	.then(client => {
-		console.log(client);
-		facilities.forEach(fac => fac.client === undefined ? fac.client = client._id : null);
-	
-		const promises = facilities.map(fac => fac._id ? Facility.findOneAndUpdate(fac._id, omit(fac, '_id')) : Facility.create(fac));
+	Client.findOneAndUpdate(query, client, {new: true})
+	.then(client => Helpers.ifNeedRemoveFacilities(facilities, client))
+	.then(client => Helpers.ifNeedUpdateOrCreateFacilities(facilities, client))
+	.then(result => {
 
-		return Promise.all(promises)
+		const {client, newFacilities} = result;
+		
+		return Helpers.ifNeedAddFacilityToClient(newFacilities||facilites, client)
 	})
-	.then(() => Client.findOne(query))
+	.then(client => Client.findOne({_id: client._id}))
 	.then(client => {
-		console.log(client);
-
 		return res.json(client);
 	})
 	.catch(err => {
 		console.log(err);
-
 		return res.status(400).send(err);
-	})
+	});
 }
 
 /**
@@ -101,7 +87,6 @@ function remove(req, res) {
 		return res.status(200).send(err);
 	})
 }
-
 
 
 module.exports = {
