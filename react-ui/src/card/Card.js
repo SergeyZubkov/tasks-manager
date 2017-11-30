@@ -149,13 +149,13 @@ class Card extends Component {
           {priorityView}
           <div className='card__header-wrapper'>
             <div className="author">
-              <Label bsStyle='primary'> создал: </Label>  {author}
+              <Label bsStyle='primary'> создал: </Label>  {author.name}
             </div>
             <div className="executor">
-              <Label bsStyle='info'> исполнитель: </Label> {executor}
+              <Label bsStyle='info'> исполнитель: </Label> {executor.name}
             </div>
             <div className="responsible">
-              <Label bsStyle='success'>ответственный:</Label> {responsible}
+              <Label bsStyle='success'>ответственный:</Label> {responsible.name}
             </div>
           </div>
           <div

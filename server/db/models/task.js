@@ -15,11 +15,11 @@ const ComentSchema = new mongoose.Schema({
 });
 
 const TaskSchema = new mongoose.Schema({
-	author: String,
-	executor: String,
+	author: {type: Schema.Types.ObjectId, ref: 'User', autopopulate: {select: 'name'}},
+	executor: {type: Schema.Types.ObjectId, ref: 'User', autopopulate: {select: 'name'}},
+	responsible: {type: Schema.Types.ObjectId, ref: 'User', autopopulate: {select: 'name'}},
 	column: String,
 	client: {type: Schema.Types.ObjectId , ref: 'Client', autopopulate: true},
-	responsible: String,
 	comments: [ComentSchema],
   text: String,
   date: Date,
@@ -39,7 +39,6 @@ const deleteClientUndefined = function(next) {
 
 
 TaskSchema.pre('findOneAndUpdate', deleteClientUndefined);
-
 
 TaskSchema.plugin(autopopulate);
 

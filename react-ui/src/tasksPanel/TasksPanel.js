@@ -163,7 +163,6 @@ class TasksPannel extends Component {
         <AddTaskModal
           show={this.state.showAddTaskModal}
           onHide={this.closeAddTaskModal}
-          clients={this.state.clients}
         />
         <ClientsModal
           show={this.state.showClientsModal}

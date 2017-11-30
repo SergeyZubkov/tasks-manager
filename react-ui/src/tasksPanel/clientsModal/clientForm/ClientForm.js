@@ -35,7 +35,7 @@ const renderFacilities = ({fields}) => (
 						name={`${facility}.address`}
 						component={TextInput}
 						type='text'
-						label="Адресс"
+						label="Адрес"
 					/>
 					<Field
 						name={`${facility}.operator`}
@@ -126,7 +126,7 @@ let ClientEditForm = reduxForm({
 	mode: 'edit'
 })(ClientForm)
 
-ClientEditForm = connect(state => ({initialValues: state.clientEditing}))(ClientEditForm);
+ClientEditForm = connect(state => ({initialValues: state.entities.clients.editing}))(ClientEditForm);
 
 let ClientAddForm = reduxForm({
 	form: 'ClientAddForm',

@@ -31,6 +31,7 @@ class ClientsModal extends Component {
 	}
 
 	componentDidMount() {
+		console.log('clients modal was mounted')
 		this.props.getClients()
 	}
 
@@ -63,7 +64,6 @@ class ClientsModal extends Component {
   }
 
   closeClientEditForm = () => {
-  	this.props.unsetEditingClient();
   	this.setState({showClientEditForm: false})
   }
 
@@ -79,6 +79,7 @@ class ClientsModal extends Component {
 	updateClient = (updatedClient) => {
 		this.closeClientEditForm();
 		this.props.updateClient(updatedClient);
+		this.props.unsetEditingClient();
 	}
 
 	renderClientItem = (client) => {

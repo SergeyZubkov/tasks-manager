@@ -50,6 +50,7 @@ class EditTaskModal extends Component {
 				users: users
 			});
 		});
+
 	}
 
 	close = () => {
@@ -105,12 +106,12 @@ class EditTaskModal extends Component {
 
 	renderExecutorSelectOptions() {
 		return this.state.users
-		.map(user => <option key={user._id} value={user.name}>{user.name}</option>)
+		.map(user => <option key={user._id} value={user._id}>{user.name}</option>)
 	}
 
 	renderResponsibleSelectOptions() {
 		return this.state.users
-		.map(user => <option key={user._id} value={user.name}>{user.name}</option>)
+		.map(user => <option key={user._id} value={user._id}>{user.name}</option>)
 	}
 
 
@@ -202,7 +203,7 @@ class EditTaskModal extends Component {
 							  <Validation.components.Select
 							  	name='executor'
 							  	className='form-control'
-							  	value={this.state.executor}
+							  	value={this.state.executor._id}
 							  	validations={['required']}
 							  	onChange={this.changeExecutorSelect}
 							  >
@@ -214,7 +215,7 @@ class EditTaskModal extends Component {
 							  <Validation.components.Select
 							  	name='responsible'
 							  	className='form-control'
-							  	value={this.state.responsible}
+							  	value={this.state.responsible._id}
 							  	validations={['required']}
 							  	onChange={this.changeResponsibleSelect}
 							  >

@@ -11,7 +11,8 @@ class AddUserModal extends Component {
     
     this.state = {
       show: this.props.show,
-      name: '',
+      firstName: '',
+      lastName: '',
       email: '',
       password: ''
     }
@@ -25,34 +26,34 @@ class AddUserModal extends Component {
     this.props.onHide();
   }
 
-  changeName = (e) => {
-    const name = e.target.value;
-    this.setState({name: name});
-  }
+  handleChange = (e) => {
+    const {name, value} = e.target;
 
-  changePassword = (e) => {
-    const password = e.target.value;
-    this.setState({password: password});
-  }
-
-  changeEmail = (e) => {
-    const email = e.target.value;
-    this.setState({email: email});
+    this.setState({[name]: value});
   }
 
   submit = (e) => {
     e.preventDefault();
+
+    const {
+      firstName, 
+      lastName,
+      email,
+      password
+    } = this.state;
+
     const user = {
-      name: this.state.name,
-      "email": this.state.email,
-      "password": this.state.password
+      name: `${firstName.charAt(0).toUpperCase() + firstName.slice(1)} ${lastName.charAt(0).toUpperCase() + lastName.slice(1)}`,
+      email: this.state.email,
+      password: this.state.password
     };
 
     userDataService
     .addUser(user);
 
     this.setState({
-      name: '',
+      firstName: '',
+      lastName: '',
       email: '',
       password: ''
     })
@@ -80,10 +81,23 @@ class AddUserModal extends Component {
               <ControlLabel>Имя</ControlLabel>
                 <Validation.components.Input
                   className='form-control'
-                  name='name' 
+                  name='firstName' 
                   type='text'
-                  onChange={this.changeName}
-                  value={this.state.name}
+                  onChange={this.handleChange}
+                  value={this.state.firstName}
+                  validations={['required']}
+                />
+            </FormGroup>
+            <FormGroup
+              controlId="formBasicText"
+            >
+              <ControlLabel>Фамилия</ControlLabel>
+                <Validation.components.Input
+                  className='form-control'
+                  name='lastName' 
+                  type='text'
+                  onChange={this.handleChange}
+                  value={this.state.lastName}
                   validations={['required']}
                 />
             </FormGroup>
@@ -95,7 +109,7 @@ class AddUserModal extends Component {
                   className='form-control'
                   name='email'
                   type='email'
-                  onChange={this.changeEmail}
+                  onChange={this.handleChange}
                   value={this.state.email}
                   validations={['required', 'email']}
                 />
@@ -107,7 +121,7 @@ class AddUserModal extends Component {
                 <Validation.components.Input
                   className='form-control'
                   name='password'
-                  onChange={this.changePassword}
+                  onChange={this.handleChange}
                   value={this.state.password}
                   validations={['required']}
                 />

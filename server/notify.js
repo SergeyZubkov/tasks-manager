@@ -25,9 +25,9 @@ var send = function(mailOptions) {
 module.exports = class Notify {
 	static wasCreatedTask(task) {
 
-		if (task.author !== task.executor) {
+		if (task.author.name !== task.executor.name) {
 			User
-			.findOne({name: task.executor})
+			.findOne({name: task.executor.name})
 			.exec(function(err, executor) {
 				var mailOptions = {
 				  from: '',
@@ -42,7 +42,7 @@ module.exports = class Notify {
 
 		if (task.author !== task.responsible) {
 			User
-			.findOne({name: task.responsible})
+			.findOne({name: task.responsible.name})
 			.exec(function(err, responsible) {
 				var mailOptions = {
 				  from: '',
@@ -56,32 +56,36 @@ module.exports = class Notify {
 		}
 	}
 	static wasEditedTask(editedTask, originalTask) {
-		let addressList = [
+		let notifedUsers = [
 			editedTask.executor,
 			editedTask.responsible
 		];
+		console.log('editedTask');
+		console.log(editedTask);
+		console.log('originalTask');
+		console.log(originalTask);
 
-		addressList = addressList.filter(person => originalTask.author !== person);
+		notifedUsers = notifedUsers.filter(user => originalTask.author.name !== user.name);
 
 		if (originalTask) {
-			if (editedTask.executor !== originalTask.executor){
-				addressList.push(originalTask.executor);
+			if (editedTask.executor.name !== originalTask.executor.name){
+				notifedUsers.push(originalTask.executor);
 			}
-			if (editedTask.responsible !== originalTask.responsible){
-				addressList.push(originalTask.responsible);
+			if (editedTask.responsible.name !== originalTask.responsible.name){
+				notifedUsers.push(originalTask.responsible);
 			}
 		}
 		
-		addressList.forEach(userName => {
+		notifedUsers.forEach(user => {
 			User
-			.findOne({name: userName})
+			.findOne({name: user.name})
 			.exec(function(err, user) {
 				let mailOptions = {
 				  from: '',
 				  to: user.email,
 				  subject: 'Задача была изменена',
 				  text: 'Задача была изменена',
-				 	html: "<p><b>Автор: </b>" + editedTask.author + "</p><p><b>Исполнитель: </b>"+ editedTask.executor + "</p><p><b>Отвественный: </b>"+ editedTask.responsible + "</p><p>" + editedTask.text + "</p>" + APP_LINK
+				 	html: "<p><b>Автор: </b>" + editedTask.author.name + "</p><p><b>Исполнитель: </b>"+ editedTask.executor.name + "</p><p><b>Отвественный: </b>"+ editedTask.responsible.name + "</p><p>" + editedTask.text + "</p>" + APP_LINK
 				};
 
 				send(mailOptions);
@@ -89,16 +93,16 @@ module.exports = class Notify {
 		});
 	}
 	static wasDeletedTask(task) {
-		let addressList = [
+		let notifedUsers = [
 			task.executor,
 			task.responsible
 		];
 
-		addressList = addressList.filter(person => task.author !== person);
+		notifedUsers = notifedUsers.filter(person => task.author.name !== person.name);
 
-		addressList.forEach(userName => {
+		notifedUsers.forEach(userName => {
 			User
-			.findOne({name: userName})
+			.findOne({_id: userName})
 			.exec(function(err, user) {
 				let mailOptions = {
 				  from: '',
@@ -118,16 +122,16 @@ module.exports = class Notify {
 	static wasCompletedTask(task) {
 
 	}
-	static wasCommentedTask(task) {
-		let addressList = [
+	static wasCommentedTask(task, comment) {
+		let notifedUsers = [
 			task.author,
 			task.executor,
 			task.responsible
 		];
 
-		addressList = addressList.filter(person => task.author !== person);
+		notifedUsers = notifedUsers.filter(person => comment.author.name !== person.name);
 
-		addressList.forEach(userName => {
+		notifedUsers.forEach(userName => {
 			User
 			.findOne({name: userName})
 			.exec(function(err, user) {

@@ -79,6 +79,7 @@ class DataService extends EventEmitter {
 	}
 
 	updateUser(id, newData) {
+		console.log(id)
 		return axios.put('/api/users/'+ id, newData)
 		.then(response => {
 			let updatedUser = _.extend({_id: id}, newData);
@@ -96,7 +97,7 @@ class DataService extends EventEmitter {
 
 	getUserRolesForTask(task) {
 		return _.map(_.pick(task, ['author', 'executor', 'responsible']),
-			v => v === this._currentUser.name
+			v => v.name === this._currentUser.name
 		);
 	}
 }

@@ -1,84 +1,68 @@
 import omit from 'lodash/omit';
+import omitBy from 'lodash/omitBy';
 import {combineReducers} from 'redux';
 
-const client = (state={}, action) => {
-	switch (action.type) {
-		case 'UPDATE_CLIENT':
-			const {newData} = action;
-			return {
-				...state,
-				newData
-			}
-		case 'ADD_FACILITY':
-			return {
-				...state,
-				facilities: [...state.facilities, action.facility]
-			}
-		default:
-			return state
-	}
-}
-
-const clients = (state={}, action) => {
+const byId = (state={}, action) => {
 	switch (action.type) { 
-		case 'FETCH_CLIENTS_SUCCESS':
-			return action.clients
-		case 'FETCH_CLIENTS_FAILURE':
-			console.log(action.err)
-			return state;
-		case 'ADD_CLIENT':
+		case 'ADD_CLIENT': {
+			const {clients} = action.response.entities;
+			const {result} = action.response;
+			const clientId = result;
+
 			return {
 				...state,
-				[action._id]: action.client
+				[clientId]: clients[clientId]
 			}
+		}
 		case 'UPDATE_CLIENT':
+			// action.response = {entities: {clients: {0: {..}, ..}, facilities: {0: {...}, ...}}, result: [id, ..]}
+			const {clients} = action.response.entities;
+			const updatedClientId = action.response.result[0];
+			const updatedClient = clients[updatedClientId];
 			return {
 				...state,
-				[action._id]: client(state[action._id], action)
+				[updatedClientId]: updatedClient
 			}
-		case 'ADD_FACILITY':
-			return {
-				...state,
-				[action._id]: client(state[action.facility.client], action)
-			}
+			return state;
 		case 'DELETE_CLIENT':
-			return omit(state, action._id)
+			return omit(state, action.id)
 		default:
 			return state;
 	}
 }
 
-const result = (state=[], action) => {
-	switch (action.type) {
-		case 'ADD_CLIENT': 
-			return [...state, action.client];
-		case 'DELETE_CLIENT': 
-			return state.filter(id => id !== action._id);
-		default:
-			return state;
-	}
-}
-
-const facilities = (state={}, action) => {
+const facilitiesById = (state={}, action) => {
 		switch (action.type) { 
-			case 'ADD_FACILITY':
+			case 'ADD_CLIENT':
+			case 'UPDATE_CLIENT': 
+				const {facilities} = action.response.entities;
 				return {
 					...state,
-					[action._id]: action.facility
+					...facilities
 				}
-			case 'UPDATE_FACILITY':
-				return {
-					...state,
-					[action._id]: client(state[action._id], action)
-				}
-			case 'DELETE_FACILITY':
-				return omit(state, action._id)
+			case 'DELETE_CLIENT':
+				return omitBy(state, action.id)
 			default:
 				return state;
 	}
 }
 
-const clientInfo = (state={}, action) => {
+const allIds = (state=[], action) => {
+	switch (action.type) {
+		case 'ADD_CLIENT': 
+
+			const {result: clientId} = action.response;
+
+			return [...state, clientId];
+		case 'DELETE_CLIENT': 
+			return state.filter(id => id !== action.id);
+		default:
+			return state;
+	}
+}
+
+
+const info = (state={}, action) => {
 	switch (action.type) {
 		case 'SHOW_CLIENT_INFO': 
 			return action.payload;
@@ -88,10 +72,9 @@ const clientInfo = (state={}, action) => {
 }
 
 
-const clientEditing = (state={}, action) => {
+const editing = (state={}, action) => {
 	switch (action.type) {
 		case 'SET_EDITING_CLIENT': 
-			delete action.payload.facilities;
 			return action.payload;
 		case 'UNSET_EDITING_CLIENT': 
 			return {};
@@ -100,12 +83,40 @@ const clientEditing = (state={}, action) => {
 	}
 }
 
-export const getClients = (state) => {
-	return state.entities.result.map(id => state.entities.clients[id])
+const getClient = (state, id) => {
+	console.log('getClient was executed')
+	return state.entities.clients.byId[id]
 }
 
-export default combineReducers({
-	clients,
-	facilities,
-	result
+const fillClient = (state, client) => {
+	const fillFacilities = client.facilities.map(id => state.entities.clients.facilitiesById[id]);
+	
+	return {...client, facilities: fillFacilities}	
+}
+
+export const getClients = (state) => {
+	return state.entities.clients.allIds
+	.map(id => getClient(state, id))
+	.map(client => client.facilities === undefined ?  client : fillClient(state, client))
+}
+
+const clients = combineReducers({
+	byId,
+	facilitiesById,
+	allIds,
+	info,
+	editing
 })
+
+export default (state={}, action) => {
+	if (action.type === 'FETCH_CLIENTS_SUCCESS') {
+		return {
+				...state,
+				byId: action.response.entities.clients,
+				facilitiesById: action.response.entities.facilities,
+				allIds: action.response.result
+			}
+	} else {
+		return {...state, ...clients(state, action)}
+	}
+}

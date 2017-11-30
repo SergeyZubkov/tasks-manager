@@ -92,20 +92,12 @@ function add(req, res) {
 	}
 
 	(priorityNewTask ?  isPriorityUsed() : Promise.resolve())
-	.then(() => {
-		Task.create(req.body, (err, task) => {
-			if (err) {
-				return res.status(400).send(err);
-			}
-			console.log('create Task');
-			console.log(task);
-
-			Notify.wasCreatedTask(task);
-
-			Task
-			.find({})
-			.exec((err, tasks) => res.json(tasks));
-		});
+	.then(() => Task.create(req.body))
+	.then(task => Task.findOne({_id: task._id}))
+	.then(task => {
+		console.log(task)
+		Notify.wasCreatedTask(task);
+		res.json(task)
 	})
 	.catch((err) => console.log(err))
 }
@@ -186,11 +178,11 @@ function update(req, res) {
 		Task.findOneAndUpdate(query, editedData, {new: true}, (err, updatedTask) => {
 			if (err) {
 				console.log('Error on save!');
-				console.log(err);
 				return res.status(500).send('We failed to save for some reason');
 			}
 
-			console.log('aaaaa')
+			console.log('updatedTask');
+			console.log(updatedTask);
 
 			Task
 			.find()
@@ -238,7 +230,7 @@ function addComment(req, res) {
 		task.comments.push(comment);
 
 		task.save(function(err) {
-			Notify.wasCommentedTask(task);
+			Notify.wasCommentedTask(task, comment);
 			return res.json(task);
 		});
 	});

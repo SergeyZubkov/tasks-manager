@@ -19,29 +19,40 @@ export const fetchClients = () => {
 		return axios.get('/api/clients')
 		.then(res => {
 			// {entities: {clients: {}, facilities: {}}, result: []}
-			const clients = normalize(res.data, clientsSchema);
-
-			return dispatch({type: "FETCH_CLIENTS_SUCCESS", clients})
+			return dispatch({
+				type: "FETCH_CLIENTS_SUCCESS", 
+				response: normalize(res.data, clientsSchema)
+			})
 		})
 		.catch(err => dispatch({type: "FETCH_CLIENTS_FAILURE", err}))
 	}
 }
 
 export const addClient = (client) => {
+	if (!client.facilities) client.facilities = []
+
 	return (dispatch) => {
+		console.log(client);
 		return axios.post('/api/clients',  client) 
 		.then(res => {
 				
-			// dispatch(reset('ClientAddForm'));
-			console.log(res.data)
+			dispatch(reset('ClientAddForm'));
+			dispatch({
+				type: 'ADD_CLIENT',
+				response: normalize(res.data, clientSchema)
+			})
 		})
 	}
 }
 
 export const updateClient = (client) => {
+	console.log(client);
 	return (dispatch) => {
 		return axios.put('/api/clients/' + client._id,  client)
-		.then(res => dispatch({type: 'UPDATE_CLIENT', payload: client}))
+		.then(res => dispatch({
+			type: 'UPDATE_CLIENT', 
+			response: normalize(res.data, clientSchema)
+		}))
 	}
 }
 
@@ -62,6 +73,6 @@ export const unsetEditingClient = (client) => ({
 export const deleteClient = (id) => {
 	return (dispatch) => {
 		return axios.delete('/api/clients/' + id)
-		.then(res => dispatch({type: 'DELETE_CLIENT', payload: id}))
+		.then(res => dispatch({type: 'DELETE_CLIENT', id}))
 	}
 }

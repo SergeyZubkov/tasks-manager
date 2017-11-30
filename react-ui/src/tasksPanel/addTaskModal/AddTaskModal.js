@@ -6,6 +6,7 @@ import taskDataService from '../../data/taskDataService';
 import DatePicker  from 'react-bootstrap-date-picker';
 import Validation from 'react-validation';
 import moment from 'moment';
+import {connect} from 'react-redux';
 
 const TOMORROW = moment().add(1, 'day').toISOString()
 
@@ -14,21 +15,22 @@ class AddTaskModal extends Component {
 	constructor(props) {
 		super(props);
 
-		const currentUser = userDataService.getCurrentUser().name;
+		const currentUser = userDataService.getCurrentUser();
 
 		this.state = {
 			user: currentUser,
 			show: this.props.show,
 			users: [],
-			executor: currentUser,
-			responsible: currentUser,
+			executor: currentUser._id,
+			responsible: currentUser._id,
 			text: '',
 			client: '',
 			clients: this.props.clients,
 			deadline: null,
 			disabledPriorityInput: true,
 			disabledDeadlineInput: true,
-			priority: 0
+			priority: 0,
+			deadline: null
 		}
 	}
 
@@ -63,14 +65,14 @@ class AddTaskModal extends Component {
 		e.preventDefault();
 
 		const task = {
-			author: this.state.user,
+			author: this.state.user._id,
 			executor: this.state.executor,
 			responsible: this.state.responsible,
 			text: this.state.text,
 			column: 'Задачи',
-			date: new Date(),
 			deadline: this.state.disabledDeadlineInput ? null : this.state.deadline,
-			priority: this.state.priority
+			priority: this.state.priority,
+			date: new Date()
 		};
 
 		if (this.state.client) {
@@ -90,7 +92,7 @@ class AddTaskModal extends Component {
 			client: '',
 			text: '',
 			clients: this.props.clients,
-			deadline: TOMORROW,
+			deadline: null,
 			disabledPriorityInput: true,
 			disabledDeadlienInput: true,
 			priority: 0
@@ -99,23 +101,24 @@ class AddTaskModal extends Component {
 
 	renderExecutorSelectOptions() {
 		return this.state.users
-		.map(user => <option key={user._id} value={user.name}>{user.name}</option>)
+		.map(user => <option key={user._id} value={user._id}>{user.name}</option>)
 	}
 
 	renderClientSelectOptions() {
-		let arr = this.state.clients
-		.map(
-			client =>(
-				<option key={client._id} value={client._id}>{client.name}</option>
-			)
-		);
-		arr.push(<option key={'null'} value={''}>------</option>);
-		return arr
+		// let arr = this.state.clients
+		// .map(
+		// 	client =>(
+		// 		<option key={client._id} value={client._id}>{client.name}</option>
+		// 	)
+		// );
+		// arr.push(<option key={'null'} value={''}>------</option>);
+		// return 
+		return []
 	}
 
 	renderResponsibleSelectOptions() {
 		return this.state.users
-		.map(user => <option key={user._id} value={user.name}>{user.name}</option>)
+		.map(user => <option key={user._id} value={user._id}>{user.name}</option>)
 	}
 
 	changeExecutorSelect = (e) => {
@@ -242,7 +245,7 @@ class AddTaskModal extends Component {
 									Установить срок
 								</Checkbox>
 							  <DatePicker
-							  	value={TOMORROW}
+							  	value={this.state.deadline||TOMORROW}
 							  	onChange={this.changeDate}
 							  	minDate={TOMORROW}
 							  	dayLabels={['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']}
@@ -290,4 +293,4 @@ class AddTaskModal extends Component {
 	}
 }
 
-export default AddTaskModal;
+export default connect(state => ({}))(AddTaskModal);

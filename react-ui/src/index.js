@@ -15,13 +15,15 @@ import {
   applyMiddleware,
   compose
 } from 'redux';
-import clientsReducer from './data/clients/reducer';
+import clients from './data/clients/reducer';
 import {Provider} from 'react-redux';
 import thunk from 'redux-thunk';
 import {reducer as formReducer} from 'redux-form';
 
 const rootReducer = combineReducers({
-  entities: clientsReducer,
+  entities: combineReducers({
+    clients
+  }),
   form: formReducer
 })
 

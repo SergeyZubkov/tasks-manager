@@ -15,15 +15,13 @@ class TaskDataService extends EventEmitter {
 		if (this._tasks.length === 0) {
 			return axios.get('/api/tasks')
 			.then(response => {
-				return this._tasks = response.data;
+				return this._tasks = response.data
 			})
 			.catch(error => {
 				console.log(error);
 			});
 		} else {
-			return new Promise((resolve, reject) => {
-				return resolve(this._tasks);
-			})
+			return Promise.resolve(this._tasks)
 		}
 	}
 

@@ -83,7 +83,7 @@ class AdminPanel extends Component {
 							return (
 								<User
 									key={user._id}
-									id={user._id}
+									_id={user._id}
 									name={user.name}
 									password={user.password}
 									email={user.email}

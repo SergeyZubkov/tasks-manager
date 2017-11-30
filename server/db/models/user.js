@@ -16,6 +16,12 @@ const UserSchema = new mongoose.Schema({
   password: String
 });
 
+UserSchema.pre('save', function(next) {
+	this.name = this.name.charAt(0).toUpperCase() + this.name.slice(1)
+
+	next();
+})
+
 /**
  * Statics
  */

@@ -60,11 +60,11 @@ class ClientInfoModal extends Component {
 						</Linkify>
 					</p>
 				</Modal.Body>
-			</Modal>
+		</Modal>
 		);
 	}
 }
 
 export default connect(state => ({
-	clientInfo: state.clientInfo
+	clientInfo: state.entities.clients.info
 }))(ClientInfoModal);

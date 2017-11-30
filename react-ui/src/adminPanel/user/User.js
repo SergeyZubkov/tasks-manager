@@ -12,7 +12,7 @@ class User extends Component {
 			name: this.props.name,
 			email: this.props.email,
 			password: this.props.password,
-			id: this.props.id
+			_id: this.props._id
 		}
 		console.log(this.state.id)
 	}
@@ -38,7 +38,7 @@ class User extends Component {
 
 	render() {
 		const {
-			id,
+			_id,
 			name,
 			email,
 			password,
@@ -80,10 +80,12 @@ class User extends Component {
 				<EditUserModal
 					show={showEditUserModal}
 					onHide={this.closeEditUserModal}
-					name={name}
-					email={email}
-					password={password}
-					id={id}
+					{...{
+						name,
+						email,
+						password,
+						_id
+					}}
 				/>
 			</li>
 		);
